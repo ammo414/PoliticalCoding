@@ -4,6 +4,9 @@ from airflow.decorators import dag, task
 import billCoding
 import newsCoding
 
+"""
+example of airflow dag to ingest data daily
+"""
 
 @dag(schedule='@daily', start_date=datetime(2021, 12, 1), catchup=False)
 def taskflow():
@@ -21,8 +24,8 @@ def taskflow():
         except:
             return False
 
-    @task(task_id='dummy')
-    def dummy(a, b):
+    @task(task_id='political_data_ingest')
+    def political_data_ingest(a, b):
         if a and b:
             print('works')
         else:
@@ -30,6 +33,6 @@ def taskflow():
 
     a = billsAirflow()
     b = newsAirflow()
-    dummy(a, b)
+    political_data_ingest(a, b)
 
 taskflow()
