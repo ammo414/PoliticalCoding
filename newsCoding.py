@@ -1,16 +1,20 @@
-import constants
+import xml.etree as ET
 
+import constants
 import utils.project_utils as utils
 import utils.llm_utils as llm_utils
 import article_objects
+
 
 """
 all news processing
 """
 
-def get_news():
+def get_news_perignon():
     """
-    main function. creates csv, unpacks and processes JSON, writes data to csv"""
+    main function. creates csv, unpacks and processes JSON, writes data to csv
+    """
+    
     news_api_key = constants.PERIGON_API_KEY
 
     url = f'https://api.goperigon.com/v1/all?apiKey={news_api_key}&from=2024-07-26&country=us&sourceGroup=top100&showNumResults=true&showReprints=false&excludeLabel=Non-news&excludeLabel=Opinion&excludeLabel=Paid%20News&excludeLabel=Roundup&excludeLabel=Press%20Release&sortBy=date&language=en&category=Politics'
@@ -32,6 +36,18 @@ def get_news():
         news_article.add_cap_code(news_code)
 
         news_article.write_to_csv(filename)
+
+
+def get_news_google_rss():
+    url = 'https://rss.app/feeds/IbzouYj7CpKSEWRi.xml'
+    content = utils.load_google_rss(url, 'news')
+
+    filename = utils.get_filename('news')
+
+
+
+
+
 
 
 def cap_code(news_article: article_objects.News):
@@ -64,6 +80,7 @@ def cap_code(news_article: article_objects.News):
                         }
     
     message_str = llm_utils.send_to_open_ai(news_article)
+    
 
     code = 0
     try:
@@ -75,4 +92,4 @@ def cap_code(news_article: article_objects.News):
 
 
 if __name__ == '__newsCoding__':
-    get_news()
+    get_news_perignon()

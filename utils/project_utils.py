@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import datetime
 import requests
 import time
+import xml.etree.ElementTree as ET
 
 """
 common functions for the rest of the project
@@ -15,6 +16,7 @@ def load_url(url, type):
     time.sleep(1)
     response = requests.get(url)
     content = response.json()
+
     if type == 'bill':
         if 'error' in content:
             print(content['error'])
@@ -27,6 +29,12 @@ def load_url(url, type):
     elif type == 'news':
         pass # haven't seen any errors yet
 
+    return content
+
+def load_google_rss(url):
+    response = requests.get(url)
+    content = ET.fromstring(url)
+    
     return content
 
 
