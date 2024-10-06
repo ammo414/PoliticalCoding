@@ -15,4 +15,6 @@ TODO:
 
 - [ ] enum everywhere
 
+- [ ] package libraries properly
+
 - [ ] Write unit tests
