@@ -1,9 +1,4 @@
 import psycopg2 
-from pathlib import Path
-import shutil
-
-import constants # database config dict
-
 
 class PostGreManager:
     def __init__(self, config):
@@ -31,7 +26,7 @@ class PostGreManager:
             connection = self.connection_pool.getconn()
             cursor = connection.cursor()
             cursor.execute(query)
-            connection.commit() # need to see if commit at the top works
+            connection.commit()
             if query.upper().startswith('SELECT'):
                 result = cursor.fetchall() # result of select statement
                 return result

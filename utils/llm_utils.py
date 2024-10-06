@@ -15,7 +15,6 @@ def send_to_open_ai(news_article: article_objects.News):
     """
     function to query open_ai llm models 
     in this case, perplexity is piggybacking off of openAi's library
-    if llm is needed for tasks other than labeling news articles, then a refactor is needed
     """
 
     title = news_article.get_title()
@@ -65,11 +64,6 @@ def send_bill_to_hugging_face(bill_article: article_objects.Bill):
     https://huggingface.co/poltextlab
     https://capbabel.poltextlab.com/
     """
-
-    
-
-
-
     
     pass
 

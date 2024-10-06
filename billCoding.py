@@ -9,7 +9,9 @@ all bills processing
 """
 
 def get_bills():
-    """main function. creates csv, unpacks and processes JSON, writes data to csv"""
+    """
+    main function. creates csv, unpacks and processes JSON, writes data to csv
+    """
     api_key = constants.CONGRESS_API_KEY
 
     url = 'https://api.congress.gov/v3/bill?api_key=' + api_key
