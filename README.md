@@ -13,4 +13,6 @@ TODO:
 
 - [ ] Add HuggingFace function into airflow
 
+- [ ] enum everywhere
+
 - [ ] Write unit tests
