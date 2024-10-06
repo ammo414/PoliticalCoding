@@ -109,13 +109,6 @@ def cap_code(news_article: article_objects.News):
 
     return code
 
-def batch_to_hugging_face():
-    db = pgm(constants.db_config)
-    db.connect()
-
-
-    pass
-
 
 if __name__ == '__newsCoding__':
     #get_news_perignon()
