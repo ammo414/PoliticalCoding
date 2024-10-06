@@ -33,9 +33,9 @@ def load_url(url, type):
 
 def load_google_rss(url):
     response = requests.get(url)
-    content = ET.fromstring(url)
+    rss_feed = ET.fromstring(url)
     
-    return content
+    return rss_feed
 
 
 def move_csvs_to_archive(which_data):
@@ -50,7 +50,7 @@ def move_csvs_to_archive(which_data):
 def get_filename(which_data):
     """
     creates filename for csvs for both bills and news
-    which_data should be either 'bills' or 'news'
+    which_data should be either 'bill' or 'news'
     """
     now = datetime.now().strftime('%d-%m-%y|%H:%M')
     filename = f'{which_data}|{now}.csv'

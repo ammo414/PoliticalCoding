@@ -2,6 +2,9 @@ import constants
 from openai import OpenAI
 import time
 import article_objects
+from transformers import (AutoModelForSequenceClassification, AutoTokenizer, 
+                          Trainer, TrainingArguments)
+
 
 
 """
@@ -51,3 +54,26 @@ def send_to_open_ai(news_article: article_objects.News):
 
     ## perplexity's response structure. update this is using a model with a different structure
     return response['choices']['0']['message']['content']
+
+
+def send_bill_to_hugging_face(bill_article: article_objects.Bill):
+    
+    """
+    llm function to send a BILL through a huggingface model to get CAP coded. 
+    More information on the model here:
+    https://figshare.com/s/8e3e9d1ae22c07869d6d
+    https://huggingface.co/poltextlab
+    https://capbabel.poltextlab.com/
+    """
+
+    
+
+
+
+    
+    pass
+
+
+def send_news_to_hugging_face(news_article: article_objects.Bill):
+
+    pass

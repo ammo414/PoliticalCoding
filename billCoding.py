@@ -15,7 +15,7 @@ def get_bills():
     url = 'https://api.congress.gov/v3/bill?api_key=' + api_key
     content = utils.load_url(url, 'bill')
 
-    filename = utils.get_filename('bills')
+    filename = utils.get_filename('bill') 
 
     for b in content['bills']:
         bill_number = b['number']
@@ -41,6 +41,7 @@ def get_bills():
         bill = article_objects.Bill(bill_number, bill_title, bill_url, bill_committees, bill_policy_area, bill_type, bill_congress)
         code = cap_code(bill)
         bill.add_cap_code(code)
+        # after loaded into database, go back and batch send through huggingface
 
         bill.write_to_csv(filename)
 
