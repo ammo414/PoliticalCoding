@@ -103,3 +103,5 @@ class Bill(Article):
         except AttributeError as error:
             print(error)
             return None
+
+    

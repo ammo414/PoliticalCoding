@@ -1,7 +1,7 @@
 import constants
-
-import utils.project_utils as utils
 import article_objects
+import utils.project_utils as utils
+import utils.llm_utils as llm_utils
 
 
 """
@@ -57,6 +57,12 @@ def cap_code(bill: article_objects.Bill) -> int:
     title = bill.get_title()
     print(title)
 
+    # huggingface
+    bill_text = '|'.join((policy_area, committees, title))
+    return classify_text_with_huggingface(bill_text, 'bill')
+
+    #non-llm approach. Should AB which approach works better.
+    """
     if 'abort' in title.lower():
         return 200 # abortion -- right to privacy
     elif 'foreign' in title.lower():
@@ -158,3 +164,4 @@ def cap_code(bill: article_objects.Bill) -> int:
         case 'Water Resources Development':
             return 700
     return 0
+    """
