@@ -59,7 +59,7 @@ def cap_code(bill: article_objects.Bill) -> int:
 
     # huggingface
     bill_text = '|'.join((policy_area, committees, title))
-    return classify_text_with_huggingface(bill_text, 'bill')
+    return llm_utils.classify_text_with_huggingface(bill_text, 'bill')
 
     #non-llm approach. Should AB which approach works better.
     """

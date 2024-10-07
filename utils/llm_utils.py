@@ -8,7 +8,7 @@ import torch
 
 
 """
-LLM functions. If more functions are needed, or if we want to use different models, keep them here
+LLM functions.
 """
 
 def send_to_open_ai(news_article: article_objects.News):
