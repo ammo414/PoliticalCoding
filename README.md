@@ -9,10 +9,6 @@ This is a project to ingest congressional data from the [Library of Congress's A
 Currently using an ad hoc Google News RSS to scrape political media data. After establishing a MVP, I'll work to scrape multiple rss feeds directly from each news source.
 
 TODO:
-- [ ] Complete HuggingFace integration for classifying data
-
-- [ ] Add HuggingFace function into airflow
-
 - [ ] enum everywhere
 
 - [ ] package libraries properly
