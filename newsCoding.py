@@ -74,31 +74,11 @@ def cap_code(news_article: article_objects.News):
     uses an LLM to find the best cap_code
     """
     
-    cap_code_crossmap = {'macroeconomics': 1,
-                        'civil rights': 2,
-                        'health': 3,
-                        'agriculture': 4,
-                        'labor': 5,
-                        'education': 6,
-                        'environment': 7,
-                        'energy': 8,
-                        'immigration': 9,
-                        'transportation': 10,
-                        'law and crime': 12,
-                        'social welfare': 13,
-                        'housing': 14,
-                        'domestic commerce': 15,
-                        'defense': 16,
-                        'technology': 17,
-                        'foreign trade': 18,
-                        'international affairs': 19,
-                        'government operations': 20,
-                        'public lands': 21,
-                        'culture': 23,
-                        '0': 0
-                        }
-    
-    message_str = llm_utils.send_to_open_ai(news_article)
+    news_text = '|'.join((news_article.get_title, news_article.get_description))
+    llm_utils.classify_text_with_huggingface(news_text, news)
+
+    # perplexity approach. too (monetarily) costly
+    # message_str = llm_utils.send_to_open_ai(news_article)
 
 
     code = 0
@@ -113,4 +93,3 @@ def cap_code(news_article: article_objects.News):
 if __name__ == '__newsCoding__':
     #get_news_perignon()
     get_news_google_rss()
-    batch_news_to_hugging_face()
