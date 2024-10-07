@@ -52,7 +52,7 @@ class Article:
                 return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)', 'bill', placeholders.values())
             
             else:
-                print(f'Row length mishap. Look at {self.number} for more info')
+                print(f'Row length mishap. Look at {self.title} for more info')
                 return False
         
         else:

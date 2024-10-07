@@ -62,8 +62,8 @@ def get_news_google_rss():
         news_description = item.find('description').text
 
         news_article = article_objects.News(news_article, news_url, news_source, news_pub_date, news_title, news_description)
-        #news_code = cap_code(news_article)
-        news_article.add_cap_code(-1) # don't use perplexity. Use huggingface instead
+        news_code = cap_code(news_article)
+        news_article.add_cap_code(news_code) # don't use perplexity. Use huggingface instead
 
         news_article.wite_to_csv(filename)      
         news_article.send_query()
@@ -80,12 +80,6 @@ def cap_code(news_article: article_objects.News):
     # perplexity approach. too (monetarily) costly
     # message_str = llm_utils.send_to_open_ai(news_article)
 
-
-    code = 0
-    try:
-        code = cap_code_crossmap[message_str]
-    except KeyError:
-        print('Invalid response from LLM')
 
     return code
 
