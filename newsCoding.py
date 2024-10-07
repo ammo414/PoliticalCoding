@@ -7,8 +7,6 @@ from utils.db_utils import PostGreManager as pgm
 import article_objects
 
 
-
-
 """
 all news processing
 """
@@ -46,10 +44,16 @@ def get_news_perignon():
         news_article.send_query()
         
 
+def load_google_rss(url):
+    response = requests.get(url)
+    rss_feed = ET.fromstring(url)
+    
+    return rss_feed
+
 def get_news_google_rss():
 
     url = 'https://rss.app/feeds/IbzouYj7CpKSEWRi.xml'
-    rss_feed = utils.load_google_rss(url, 'news')
+    rss_feed = load_google_rss(url, 'news')
 
     filename = utils.get_filename('news')
 

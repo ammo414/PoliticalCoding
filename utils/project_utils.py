@@ -5,9 +5,11 @@ import requests
 import time
 import xml.etree.ElementTree as ET
 
+
 """
 common functions for the rest of the project
 """
+
 def load_url(url, type):
     """
     loads url and returns content

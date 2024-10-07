@@ -1,5 +1,10 @@
 import psycopg2 
 
+
+"""
+Manages all db connection functionality
+"""
+
 class PostGreManager:
     def __init__(self, config):
         self.config = config

@@ -6,7 +6,6 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
 
-
 """
 LLM functions.
 """
@@ -53,6 +52,7 @@ def send_to_open_ai(news_article: article_objects.News):
 
     ## perplexity's response structure. update this is using a model with a different structure
     return response['choices']['0']['message']['content']
+
 
 def classify_text_with_huggingface(text, which_data):
     """
