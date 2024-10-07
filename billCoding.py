@@ -41,9 +41,10 @@ def get_bills():
             bill_committees.append(c['name'])
 
         bill = article_objects.Bill(bill_number, bill_title, bill_url, bill_committees, bill_policy_area, bill_type, bill_congress)
+        
+        # cap_code
         code = cap_code(bill)
         bill.add_cap_code(code)
-        # after loaded into database, go back and batch send through huggingface
 
         bill.write_to_csv(filename)
 
@@ -61,7 +62,7 @@ def cap_code(bill: article_objects.Bill) -> int:
     bill_text = '|'.join((policy_area, committees, title))
     return classify_text_with_huggingface(bill_text, 'bill')
 
-    #non-llm approach. Should AB which approach works better.
+    # non-llm approach. Should AB which approach works better.
     """
     if 'abort' in title.lower():
         return 200 # abortion -- right to privacy
