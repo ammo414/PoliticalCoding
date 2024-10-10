@@ -33,12 +33,6 @@ def load_url(url, type):
 
     return content
 
-def load_google_rss(url):
-    response = requests.get(url)
-    rss_feed = ET.fromstring(url)
-    
-    return rss_feed
-
 
 def move_csvs_to_archive(which_data):
     source_dir = Path()

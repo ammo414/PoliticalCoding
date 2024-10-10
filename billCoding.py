@@ -8,7 +8,10 @@ all bills processing
 """
 
 def get_bills():
-    """main function. creates csv, unpacks and processes JSON, writes data to csv"""
+    """
+    main function. creates csv, unpacks and processes JSON, writes data to csv
+    """
+    
     api_key = constants.CONGRESS_API_KEY
 
     url = 'https://api.congress.gov/v3/bill?api_key=' + api_key
@@ -49,10 +52,19 @@ def cap_code(bill: article_objects.Bill) -> int:
     using policy area, committees, and title from the bill, finds the best cap code
     """
     policy_area = bill.get_policy_area()
+    if policy_area is None:
+        policy_area = ""
     committees = bill.get_committees()
     title = bill.get_title()
     print(title)
 
+    # huggingface
+    committee_string = '|'.join(committees)
+    bill_text = '|'.join((policy_area, committee_string, title))
+    return llm_utils.classify_text_with_huggingface(bill_text, 'bill')
+
+    # non-llm approach. Should AB which approach works better
+    """
     if 'abort' in title.lower():
         return 200 # abortion -- right to privacy
     elif 'foreign' in title.lower():
@@ -154,3 +166,4 @@ def cap_code(bill: article_objects.Bill) -> int:
         case 'Water Resources Development':
             return 700
     return 0
+    """

@@ -14,18 +14,14 @@ import constants
 LLM functions. If more functions are needed, or if we want to use different models, keep them here
 """
 
-def send_to_open_ai(news_article: article_objects.News):
+def send_to_open_ai(news_text):
     """
     function to query open_ai llm models 
     in this case, perplexity is piggybacking off of openAi's library
     if llm is needed for tasks other than labeling news articles, then a refactor is needed
     """
 
-    title = news_article.get_title()
-    description = news_article.get_description()
-
-    chat_news_text = title + '.' + description
-    chat_request_text = f'text:{chat_news_text}.\n Possible categories: macroeconomics, civil rights, health, agriculture, labor, education, \
+    chat_request_text = f'text:{news_text}.\n Possible categories: macroeconomics, civil rights, health, agriculture, labor, education, \
         environment, energy, immigration, transportation, law and crime, social welfare, housing, domestic commerce, defense, \
         technology, foreign trade, international affairs, government operations, public lands, culture. \n Select a single category.'
 
@@ -59,73 +55,66 @@ def send_to_open_ai(news_article: article_objects.News):
     return response['choices']['0']['message']['content']
 
 
-def send_bill_to_hugging_face(bill_article: article_objects.Bill):
-    
+def classify_text_with_huggingface(text, which_data):
     """
-    llm function to send a BILL through a huggingface model to get CAP coded. 
-    More information on the model here:
-    https://figshare.com/s/8e3e9d1ae22c07869d6d
-    https://huggingface.co/poltextlab
-    https://capbabel.poltextlab.com/
+    takes text and returns cap_code 
     """
+    # load correct model
+    if which_data == 'bill':
+        model_name = "poltextlab/xlm-roberta-large-english-legislative-cap-v3"
+    elif which_data == 'news':
+        model_name = "poltextlab/xlm-roberta-large-english-medica-cap-v3"
 
+    else:
+        print("Article type mismatch.")
+        return -1 # never a cap code
+    model = AutoModelForSequenceClassification.from_pretrained(model_name)
+
+    # tokenize
+    # it looks like both models use the same tokenizer
+    tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-large")
+
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512, padding=True)
+
+    #infer
+    with torch.no_grad():
+        outputs = model(**inputs)
+        # model is where the two models differ, surprisingly enough
+
+    # get prediction as class
+    predicted_class = torch.argmax(outputs.logits, dim=1).item()
+
+    # convert from class to label
+    label = model.config.id2label[predicted_class]
+
+    return label_crossmap(label)
+
+
+def label_crossmap(label):
     
+    crossmap= {
+        'LABEL_0':'Macroeconomics',
+        'LABEL_1':'Civil Rights',
+        'LABEL_2':'Health',
+        'LABEL_3':'Agriculture',
+        'LABEL_4':'Labor',
+        'LABEL_5':'Education',
+        'LABEL_6':'Environment',
+        'LABEL_7':'Energy',
+        'LABEL_8':'Immigration',
+        'LABEL_9':'Transportation',
+        'LABEL_10':'Law and Crime',
+        'LABEL_11':'Social Welfare',
+        'LABEL_12':'Housing',
+        'LABEL_13':'Domestic Commerce',
+        'LABEL_14':'Defense',
+        'LABEL_15':'Technology',
+        'LABEL_16':'Foreign Trade',
+        'LABEL_17':'International Affairs',
+        'LABEL_18':'Government Operations',
+        'LABEL_19':'Public Lands',
+        'LABEL_20':'Culture',
+        'LABEL_21':'None Available'
+    }
 
-
-
-    
-    pass
-
-
-def send_news_to_hugging_face(news_article: article_objects.Bill):
-
-    pass
-
-
-def batch_news_to_hugging_face():
-
-    
-    query = "SELECT article_id, description, cap_code FROM news WHERE cap_code = -1;"
-    
-    db = pgm(constants.db_config)
-    df = pd.read_sql(query, db.connect())
-    hg_data = Dataset.from_pandas(df)
-
-    #tokenized dataset
-    dataset = hg_data.map(lambda df: AutoTokenizer.from_pretrained("xlm-roberta-large")(df['description'], max_length=MAXLEN, truncation=True, padding='max_length'), batched=True, remove_columns=hg_data.column_names)
-
-    model = AutoModelForSequenceClassification.from_pretrained("poltextlab/xlm-roberta-large-english-media-cap-v3",
-                                                               num_labels=num_labels,
-                                                               problem_type="multi_label_classification",
-                                                               ignore_mismatched_sizes=True
-                                                               )
-    
-    #figure out how to actually get predictions
-    #figure out how to add predictions to database
-
-def batch_bills_to_hugging_face():
-
-    """
-    When first querying bills, there's no guarantee that we will have a description of the text/that the body of the bill 
-    has already been transcripted. we're making do with what we have (title, policy area) if we decide to use this
-    """
-
-    query = "SELECT number, title, policy_area FROM bills WHERE cap_code = -1;" # is -1 actually used?
-
-    db = pg(constants.db_config)
-    df = pd.read_sql(query, db.connect())
-    df['text'] = df['title'] + df['policy_area']
-
-    hg_data = Dataset.from_pandas(df)
-
-    #tokenized dataset
-    dataset = hg_data.map(lambda df: AutoTokenizer.from_pretrained("xlm-roberta-large")(df['text'], max_length=MAXLEN, truncation=True, padding='max_length'), batched=True, remove_columns=hg_data.column_names)
-
-    model = AutoModelForSequenceClassification.from_pretrained("poltextlab/xlm-roberta-large-english-legislative-cap-v3",
-                                                                num_labels=num_labels,
-                                                                problem_type="multi_label_classification",
-                                                                ignore_mismatched_sizes=True
-                                                                )
-    
-    #figure out how to actually get predictions
-    #figure out how to add predictions to database
+    return crossmap[label]

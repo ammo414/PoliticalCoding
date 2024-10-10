@@ -42,12 +42,19 @@ def get_news_perignon():
         placeholders = vars(news_article)
     
         news_article.send_query()
+     
         
+def load_google_rss(url):
+    response = requests.get(url)
+    rss_feed = ET.fromstring(url)
+    
+    return rss_feed
+
 
 def get_news_google_rss():
 
     url = 'https://rss.app/feeds/IbzouYj7CpKSEWRi.xml'
-    rss_feed = utils.load_google_rss(url, 'news')
+    rss_feed = load_google_rss(url)
 
     filename = utils.get_filename('news')
 
@@ -60,8 +67,8 @@ def get_news_google_rss():
         news_description = item.find('description').text
 
         news_article = article_objects.News(news_article, news_url, news_source, news_pub_date, news_title, news_description)
-        #news_code = cap_code(news_article)
-        news_article.add_cap_code(-1) # don't use perplexity. Use huggingface instead
+        news_code = cap_code(news_article)
+        news_article.add_cap_code(news_code)
 
         news_article.wite_to_csv(filename)      
         news_article.send_query()
@@ -71,49 +78,14 @@ def cap_code(news_article: article_objects.News):
     """
     uses an LLM to find the best cap_code
     """
-    
-    cap_code_crossmap = {'macroeconomics': 1,
-                        'civil rights': 2,
-                        'health': 3,
-                        'agriculture': 4,
-                        'labor': 5,
-                        'education': 6,
-                        'environment': 7,
-                        'energy': 8,
-                        'immigration': 9,
-                        'transportation': 10,
-                        'law and crime': 12,
-                        'social welfare': 13,
-                        'housing': 14,
-                        'domestic commerce': 15,
-                        'defense': 16,
-                        'technology': 17,
-                        'foreign trade': 18,
-                        'international affairs': 19,
-                        'government operations': 20,
-                        'public lands': 21,
-                        'culture': 23,
-                        '0': 0
-                        }
-    
-    message_str = llm_utils.send_to_open_ai(news_article)
+    news_text = '|'.join((news_article.get_title, news_article.get_description))
+    llm_utils.classify_text_with_huggingface(news_text, news)
 
-
-    code = 0
-    try:
-        code = cap_code_crossmap[message_str]
-    except KeyError:
-        print('Invalid response from LLM')
+    # perplexity approach: too (monetarily) costly
+    # message_str = llm_utils.send_to_open_ai(news_article)
 
     return code
-
-def batch_to_hugging_face():
-    db = pgm(constants.db_config)
-    db.connect()
-
-
-    pass
-
+    
 
 if __name__ == '__newsCoding__':
     #get_news_perignon()
