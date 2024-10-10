@@ -1,6 +1,5 @@
 from openai import OpenAI
 import time
-import article_objects
 import torch
 import pandas as pd
 from transformers import (AutoModelForSequenceClassification, AutoTokenizer, 

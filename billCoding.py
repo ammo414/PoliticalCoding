@@ -1,4 +1,4 @@
-import constants
+import utils.constants
 import utils.project_utils as utils
 import article_objects
 

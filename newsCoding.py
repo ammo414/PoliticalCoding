@@ -1,6 +1,6 @@
 import xml.etree as ET
 
-import constants
+import utils.constants
 import utils.project_utils as utils
 import utils.llm_utils as llm_utils
 from utils.db_utils import PostGreManager as pgm
@@ -42,8 +42,8 @@ def get_news_perignon():
         placeholders = vars(news_article)
     
         news_article.send_query()
-     
-        
+
+
 def load_google_rss(url):
     response = requests.get(url)
     rss_feed = ET.fromstring(url)

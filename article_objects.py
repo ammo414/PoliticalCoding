@@ -1,6 +1,6 @@
 import csv
 
-import constants
+import uitls.constants
 from utils.db_utils import PostGreManager as pgm
 
 
