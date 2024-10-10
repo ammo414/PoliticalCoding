@@ -53,7 +53,7 @@ def load_google_rss(url):
 def get_news_google_rss():
 
     url = 'https://rss.app/feeds/IbzouYj7CpKSEWRi.xml'
-    rss_feed = load_google_rss(url, 'news')
+    rss_feed = load_google_rss(url)
 
     filename = utils.get_filename('news')
 
@@ -69,7 +69,7 @@ def get_news_google_rss():
         news_code = cap_code(news_article)
         news_article.add_cap_code(news_code) # don't use perplexity. Use huggingface instead
 
-        news_article.wite_to_csv(filename)      
+        news_article.wite_to_csv(filename)
         news_article.send_query()
 
 
@@ -83,7 +83,6 @@ def cap_code(news_article: article_objects.News):
 
     # perplexity approach. too (monetarily) costly
     # message_str = llm_utils.send_to_open_ai(news_article)
-
 
     return code
 

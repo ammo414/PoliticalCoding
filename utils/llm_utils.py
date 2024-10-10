@@ -7,7 +7,7 @@ import torch
 
 
 """
-LLM functions.
+LLM functions
 """
 
 def send_to_open_ai(news_article: article_objects.News):
@@ -86,5 +86,34 @@ def classify_text_with_huggingface(text, which_data):
     # convert from class to label
     label = model.config.id2label[predicted_class]
 
-    return label
+    return label_crossmap(label)
 
+
+def label_crossmap(label):
+    
+    crossmap= {
+        'LABEL_0':'Macroeconomics',
+        'LABEL_1':'Civil Rights',
+        'LABEL_2':'Health',
+        'LABEL_3':'Agriculture',
+        'LABEL_4':'Labor',
+        'LABEL_5':'Education',
+        'LABEL_6':'Environment',
+        'LABEL_7':'Energy',
+        'LABEL_8':'Immigration',
+        'LABEL_9':'Transportation',
+        'LABEL_10':'Law and Crime',
+        'LABEL_11':'Social Welfare',
+        'LABEL_12':'Housing',
+        'LABEL_13':'Domestic Commerce',
+        'LABEL_14':'Defense',
+        'LABEL_15':'Technology',
+        'LABEL_16':'Foreign Trade',
+        'LABEL_17':'International Affairs',
+        'LABEL_18':'Government Operations',
+        'LABEL_19':'Public Lands',
+        'LABEL_20':'Culture',
+        'LABEL_21':'None Available'
+    }
+
+    return crossmap[label]
