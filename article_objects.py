@@ -30,7 +30,7 @@ class Article:
             return None
 
     def write_to_csv(self,filename) -> None:
-        row = vars(self).keys()
+        row = vars(self).values()
         with open(filename, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerow(row)        
@@ -65,7 +65,7 @@ class News(Article):
     adds news specific attributes and method
     """
     def __init__(self, article_id, url, source, pub_date, title, description):
-        Article.__init__(self, article_id, url, source, pub_date, title, description)
+        Article.__init__(self, title, url)
         self.article_id: int = article_id
         self.source: str = source
         self.pub_date: str = pub_date
@@ -82,12 +82,12 @@ class Bill(Article):
     """
     adds bill specific attributes and methods
     """
-    def __init__(self, number, title, url, committees, policy_area, type, congress):
-        Article.__init__(self, number, title, url, committees, policy_area, bill_type, congress)
+    def __init__(self, number, title, url, committees, policy_area, bill_type, congress):
+        Article.__init__(self, title, url)
         self.number: int = number
         self.committees: list = committees
         self.policy_area: str = policy_area
-        self.type: str = bill_type
+        self.bill_type: str = bill_type
         self.congress: int = congress
 
     def get_committees(self):

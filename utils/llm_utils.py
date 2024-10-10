@@ -67,7 +67,7 @@ def classify_text_with_huggingface(text, which_data):
     else:
         print("Article type mismatch.")
         return -1 # never a cap code
-    model = AutoModelForSequenceClassification()
+    model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
     # tokenize
     # it looks like both models use the same tokenizer
