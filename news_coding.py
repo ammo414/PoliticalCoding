@@ -1,28 +1,24 @@
-import xml.etree as ET
+"""all news processing"""
 
-import utils.constants
-import utils.project_utils as utils
-import utils.llm_utils as llm_utils
+import xml.etree.ElementTree as ET
+
+from utils import constants, llm_utils, project_utils as utils
 from utils.db_utils import PostGreManager as pgm
 import article_objects
 
-
-"""
-all news processing
-"""
 
 def get_news_perignon():
     """
     main function. creates csv, unpacks and processes JSON, writes data to csv
     """
-    
+
     news_api_key = constants.PERIGON_API_KEY
-    
+   
     db = pgm(constants.db_config)
     db.connect()
 
     url = f'https://api.goperigon.com/v1/all?apiKey={news_api_key}&from=2024-07-26&country=us&sourceGroup=top100&showNumResults=true&showReprints=false&excludeLabel=Non-news&excludeLabel=Opinion&excludeLabel=Paid%20News&excludeLabel=Roundup&excludeLabel=Press%20Release&sortBy=date&language=en&category=Politics'
-    content = utils.load_url(url, 'news')
+    content = utils.load_json(url, 'news')
 
     filename = utils.get_filename('news')
 
@@ -35,8 +31,8 @@ def get_news_perignon():
         news_description = n['description']
 
         news_article = article_objects.News(news_article_id, news_url, news_source, news_pub_date, news_title, news_description)
-        #news_code = cap_code(news_article)
-        news_article.add_cap_code(-1) # don't use perplexity. Use huggingface instead
+        news_code = cap_code(news_article)
+        news_article.add_cap_code(news_code)
 
         news_article.write_to_csv(filename)
         placeholders = vars(news_article)
@@ -44,17 +40,10 @@ def get_news_perignon():
         news_article.send_query()
 
 
-def load_google_rss(url):
-    response = requests.get(url)
-    rss_feed = ET.fromstring(url)
-    
-    return rss_feed
-
-
 def get_news_google_rss():
 
-    url = 'https://rss.app/feeds/IbzouYj7CpKSEWRi.xml'
-    rss_feed = load_google_rss(url)
+    url = 'https://news.google.com/rss/search?hl=en-US&gl=US&ceid=US%3Aen&oc=11&q=politics'
+    rss_feed: ET = utils.load_rss(url)
 
     filename = utils.get_filename('news')
 
@@ -66,11 +55,11 @@ def get_news_google_rss():
         news_title = item.find('title').text
         news_description = item.find('description').text
 
-        news_article = article_objects.News(news_article, news_url, news_source, news_pub_date, news_title, news_description)
+        news_article = article_objects.News(news_article_id, news_url, news_source, news_pub_date, news_title, news_description)
         news_code = cap_code(news_article)
         news_article.add_cap_code(news_code)
 
-        news_article.wite_to_csv(filename)      
+        news_article.write_to_csv(filename)      
         news_article.send_query()
 
 
@@ -78,14 +67,13 @@ def cap_code(news_article: article_objects.News):
     """
     uses an LLM to find the best cap_code
     """
-    news_text = '|'.join((news_article.get_title, news_article.get_description))
-    llm_utils.classify_text_with_huggingface(news_text, news)
+
+    news_text = '|'.join((news_article.get_title(), news_article.get_description()))
+    return llm_utils.classify_text_with_huggingface(news_text, 'news')
 
     # perplexity approach: too (monetarily) costly
     # message_str = llm_utils.send_to_open_ai(news_article)
 
-    return code
-    
 
 if __name__ == '__newsCoding__':
     #get_news_perignon()

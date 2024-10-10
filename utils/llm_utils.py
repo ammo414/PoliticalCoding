@@ -1,34 +1,33 @@
-from openai import OpenAI
+"""Module of all LLM functions"""
+
 import time
+from openai import OpenAI
 import torch
-import pandas as pd
-from transformers import (AutoModelForSequenceClassification, AutoTokenizer, 
-                          Trainer, TrainingArguments)
-from datasets import Dataset
+from transformers import (AutoModelForSequenceClassification, AutoTokenizer)
 
-from db_utils import PostGreManager
-import constants
+from utils import constants
 
-"""
-LLM functions. If more functions are needed, or if we want to use different models, keep them here
-"""
 
 def send_to_open_ai(news_text):
     """
     function to query open_ai llm models 
     in this case, perplexity is piggybacking off of openAi's library
-    if llm is needed for tasks other than labeling news articles, then a refactor is needed
+    if perplexity is needed for tasks other than labeling news articles, then a refactor is needed
     """
 
-    chat_request_text = f'text:{news_text}.\n Possible categories: macroeconomics, civil rights, health, agriculture, labor, education, \
-        environment, energy, immigration, transportation, law and crime, social welfare, housing, domestic commerce, defense, \
-        technology, foreign trade, international affairs, government operations, public lands, culture. \n Select a single category.'
+    chat_request_text = f'text:{news_text}.\n Possible categories: macroeconomics, civil rights, \
+        health, agriculture, labor, education, environment, energy, immigration, transportation, \
+        law and crime, social welfare, housing, domestic commerce, defense, technology, \
+        foreign trade, international affairs, government operations, public lands, culture.\
+        \n Select a single category.'
 
     message = [
         {
             'role': 'system',
             'content': (
-                'You are to catalog political headlines into exactly one of a number of categories. Please identify the best category for each headline and respond with only that. If no category is appropriate, say "0" and nothing else.'
+                'You are to catalog political headlines into exactly one of a number of categories.\
+                Please identify the best category for each headline and respond with only that. \
+                If no category is appropriate, say "0" and nothing else.'
             ),
         },
         {
@@ -37,9 +36,9 @@ def send_to_open_ai(news_text):
         },
     ]
 
-    llm_api_key = constants.LLM_API_KEY
-    llm_base_url = constants.LLM_URL
-    llm_model = constants.MODEL
+    llm_api_key = constants.OPENAI_API_KEY
+    llm_base_url = constants.OPENAI_URL
+    llm_model = constants.OPENAI_MODEL
 
     time.sleep(2)
 
@@ -50,27 +49,28 @@ def send_to_open_ai(news_text):
         messages=message
     )
 
-    ## perplexity's response structure. update this is using a model with a different structure
+    ## perplexity's response structure. update this if using a model with a different structure
     return response['choices']['0']['message']['content']
 
 
 def classify_text_with_huggingface(text, which_data):
     """
-    takes text and returns cap_code 
+    takes text and returns cap_code with huggingface's 
     """
     # load correct model
     if which_data == 'bill':
         model_name = "poltextlab/xlm-roberta-large-english-legislative-cap-v3"
     elif which_data == 'news':
-        model_name = "poltextlab/xlm-roberta-large-english-medica-cap-v3"
+        model_name = "poltextlab/xlm-roberta-large-english-media-cap-v3"
 
     else:
         print("Article type mismatch.")
         return -1 # never a cap code
+
     model = AutoModelForSequenceClassification.from_pretrained(model_name)
 
     # tokenize
-    # it looks like both models use the same tokenizer
+    # both models use the same tokenizer
     tokenizer = AutoTokenizer.from_pretrained("xlm-roberta-large")
 
     inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512, padding=True)
@@ -90,7 +90,10 @@ def classify_text_with_huggingface(text, which_data):
 
 
 def label_crossmap(label):
-    
+    """
+    https://www.comparativeagendas.net/pages/master-codebook
+    """
+
     crossmap= {
         'LABEL_0':'Macroeconomics',
         'LABEL_1':'Civil Rights',

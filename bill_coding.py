@@ -1,23 +1,14 @@
-import utils.constants
-import utils.project_utils as utils
+"""all bills processing"""
+from utils import constants, llm_utils, project_utils as utils
 import article_objects
-
-
-"""
-all bills processing
-"""
 
 def get_bills():
     """
     main function. creates csv, unpacks and processes JSON, writes data to csv
     """
-    
-    api_key = constants.CONGRESS_API_KEY
 
-    url = 'https://api.congress.gov/v3/bill?api_key=' + api_key
-    content = utils.load_url(url, 'bill')
-
-    filename = utils.get_filename('bill') 
+    url = 'https://api.congress.gov/v3/bill?api_key=' + constants.CONGRESS_API_KEY
+    content = utils.load_json(url, 'bill')
 
     for b in content['bills']:
         bill_number = b['number']
@@ -25,29 +16,29 @@ def get_bills():
         bill_url = b['url'].replace('?format=json', '')
         bill_type = b['type']
         bill_congress = b['congress']
-        bill_content = utils.load_url(bill_url + '?api_key=' + api_key, 'bill')
-        
+        bill_content = utils.load_json(bill_url + '?api_key=' + constants.CONGRESS_API_KEY, 'bill')
+
         #policy_area
         try:
             bill_policy_area = bill_content['bill']['policyArea']['name']
         except KeyError:
             bill_policy_area = None
-        
+
         #committee
-        bill_committees_url = bill_url + '/committees?api_key=' + api_key
-        bill_committees_content = utils.load_url(bill_committees_url, 'bill')
+        bill_committees_url = bill_url + '/committees?api_key=' + constants.CONGRESS_API_KEY
+        bill_committees_content = utils.load_json(bill_committees_url, 'bill')
 
         bill_committees = [c['name'] for c in bill_committees_content['committees']]
 
-        bill = article_objects.Bill(bill_number, bill_title, bill_url, bill_committees, bill_policy_area, bill_type, bill_congress)
+        bill = article_objects.Bill(bill_number, bill_title, bill_url, bill_committees,
+                                    bill_policy_area, bill_type, bill_congress)
         code = cap_code(bill)
         bill.add_cap_code(code)
-        # after loaded into database, maybe go back and batch send through huggingface
-        # might be worth testing efficacy of each on older bills
-        bill.write_to_csv(filename)
+
+        bill.write_to_csv(utils.get_filename('bill'))
 
 
-def cap_code(bill: article_objects.Bill) -> int:
+def cap_code(bill: article_objects.Bill) -> str:
     """
     using policy area, committees, and title from the bill, finds the best cap code
     """
@@ -63,27 +54,42 @@ def cap_code(bill: article_objects.Bill) -> int:
     bill_text = '|'.join((policy_area, committee_string, title))
     return llm_utils.classify_text_with_huggingface(bill_text, 'bill')
 
-    # non-llm approach. Should AB which approach works better
+
+def cap_code_non_llm(bill: article_objects.Bill):
     """
+    using policy area, committees, and title, finds the best cap code without an llm    
+    """
+
+    policy_area = bill.get_policy_area()
+    if policy_area is None:
+        policy_area = ""
+    committees = bill.get_committees()
+    title = bill.get_title()
+    print(title)
+
+
+    # non-llm approach. Should AB which approach works better
+
     if 'abort' in title.lower():
         return 200 # abortion -- right to privacy
-    elif 'foreign' in title.lower():
-        if 'Financial Services Committee' in committees or 'Energy and Commerce Committee' in committees:
+    if 'foreign' in title.lower():
+        if 'Financial Services Committee' in committees \
+            or 'Energy and Commerce Committee' in committees:
             return 1800
-    
+
     match policy_area:
         case 'Agriculture and Food':
             if 'Agriculture Committee' in committees:
                 return 400 # General Agriculture -- no need to go in-depth
-            elif 'Energy and Commerce Committee' in committees:
+            if 'Energy and Commerce Committee' in committees:
                 return 400
-            elif 'Natural Resources Committee' in committees:
+            if 'Natural Resources Committee' in committees:
                 return 400
-            elif 'Education and the Workforce Committee' in committees:
+            if 'Education and the Workforce Committee' in committees:
                 return 300 # Health -- should be 332 specifically but, again, no need to go in-depth
-            elif 'Transportation and Infrastructure Committee' in committees:
+            if 'Transportation and Infrastructure Committee' in committees:
                 return 700 # Environment
-            elif 'Appropriations Committee' in committees:
+            if 'Appropriations Committee' in committees:
                 return 400
 
         case 'Animals':
@@ -97,16 +103,17 @@ def cap_code(bill: article_objects.Bill) -> int:
                 return 1600
             if 'Armed Services Committee' in committees:
                 return 1600 # defense
-            elif 'Veterans\' Affairs Committee' in committees:
+            if 'Veterans\' Affairs Committee' in committees:
                 if 'hous' in title:
                     return 1400 # general housing
                 else:
                     return 1600
-            elif 'Homeland Security Committee' in committees:
+            if 'Homeland Security Committee' in committees:
                 return 1600
-            elif 'Intelligence Committee' in committees or 'Intelligence (Permanent Select) Committee' in committees:
+            if 'Intelligence Committee' in committees\
+                or 'Intelligence (Permanent Select) Committee' in committees:
                 return 1600
-            
+
         case 'Arts, Culture, Religion':
             return 2300
         case 'Civil Rights and Liberties, Minority Issues':
@@ -166,4 +173,3 @@ def cap_code(bill: article_objects.Bill) -> int:
         case 'Water Resources Development':
             return 700
     return 0
-    """
