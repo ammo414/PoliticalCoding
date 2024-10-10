@@ -1,4 +1,5 @@
 import csv
+
 import constants
 from utils.db_utils import PostGreManager as pgm
 
@@ -30,7 +31,7 @@ class Article:
             return None
 
     def write_to_csv(self,filename) -> None:
-        row = vars(self).values()
+        row = vars(self).keys()
         with open(filename, 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerow(row)        
@@ -52,7 +53,7 @@ class Article:
                 return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)', 'bill', placeholders.values())
             
             else:
-                print(f'Row length mishap. Look at {self.title} for more info')
+                print(f'Row length mishap. Look at {self.number} for more info')
                 return False
         
         else:
@@ -65,7 +66,7 @@ class News(Article):
     adds news specific attributes and method
     """
     def __init__(self, article_id, url, source, pub_date, title, description):
-        Article.__init__(self, title, url)
+        Article.__init__(self, article_id, url, source, pub_date, title, description)
         self.article_id: int = article_id
         self.source: str = source
         self.pub_date: str = pub_date
@@ -82,12 +83,12 @@ class Bill(Article):
     """
     adds bill specific attributes and methods
     """
-    def __init__(self, number, title, url, committees, policy_area, bill_type, congress):
-        Article.__init__(self, title, url)
+    def __init__(self, number, title, url, committees, policy_area, type, congress):
+        Article.__init__(self, number, title, url, committees, policy_area, bill_type, congress)
         self.number: int = number
         self.committees: list = committees
         self.policy_area: str = policy_area
-        self.bill_type: str = bill_type
+        self.type: str = bill_type
         self.congress: int = congress
 
     def get_committees(self):
@@ -103,5 +104,3 @@ class Bill(Article):
         except AttributeError as error:
             print(error)
             return None
-
-    

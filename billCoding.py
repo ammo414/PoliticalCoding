@@ -1,7 +1,6 @@
 import constants
-import article_objects
 import utils.project_utils as utils
-import utils.llm_utils as llm_utils
+import article_objects
 
 
 """
@@ -9,9 +8,7 @@ all bills processing
 """
 
 def get_bills():
-    """
-    main function. creates csv, unpacks and processes JSON, writes data to csv
-    """
+    """main function. creates csv, unpacks and processes JSON, writes data to csv"""
     api_key = constants.CONGRESS_API_KEY
 
     url = 'https://api.congress.gov/v3/bill?api_key=' + api_key
@@ -36,15 +33,14 @@ def get_bills():
         #committee
         bill_committees_url = bill_url + '/committees?api_key=' + api_key
         bill_committees_content = utils.load_url(bill_committees_url, 'bill')
-        bill_committees = []
-        for c in bill_committees_content['committees']:
-            bill_committees.append(c['name'])
+
+        bill_committees = [c['name'] for c in bill_committees_content['committees']]
 
         bill = article_objects.Bill(bill_number, bill_title, bill_url, bill_committees, bill_policy_area, bill_type, bill_congress)
         code = cap_code(bill)
         bill.add_cap_code(code)
-        # after loaded into database, go back and batch send through huggingface
-
+        # after loaded into database, maybe go back and batch send through huggingface
+        # might be worth testing efficacy of each on older bills
         bill.write_to_csv(filename)
 
 
@@ -53,25 +49,16 @@ def cap_code(bill: article_objects.Bill) -> int:
     using policy area, committees, and title from the bill, finds the best cap code
     """
     policy_area = bill.get_policy_area()
-    if policy_area is None:
-        policy_area = ""
     committees = bill.get_committees()
     title = bill.get_title()
     print(title)
 
-    # huggingface
-    committee_string = '|'.join(committees)
-    bill_text = '|'.join((policy_area, committee_string, title))
-    return llm_utils.classify_text_with_huggingface(bill_text, 'bill')
-
-    #non-llm approach. Should AB which approach works better.
-    """
     if 'abort' in title.lower():
         return 200 # abortion -- right to privacy
     elif 'foreign' in title.lower():
         if 'Financial Services Committee' in committees or 'Energy and Commerce Committee' in committees:
             return 1800
-
+    
     match policy_area:
         case 'Agriculture and Food':
             if 'Agriculture Committee' in committees:
@@ -167,4 +154,3 @@ def cap_code(bill: article_objects.Bill) -> int:
         case 'Water Resources Development':
             return 700
     return 0
-    """
