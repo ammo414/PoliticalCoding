@@ -13,11 +13,14 @@ def get_news_perignon():
     """
 
     news_api_key = constants.PERIGON_API_KEY
-   
+
     db = pgm(constants.db_config)
     db.connect()
 
-    url = f'https://api.goperigon.com/v1/all?apiKey={news_api_key}&from=2024-07-26&country=us&sourceGroup=top100&showNumResults=true&showReprints=false&excludeLabel=Non-news&excludeLabel=Opinion&excludeLabel=Paid%20News&excludeLabel=Roundup&excludeLabel=Press%20Release&sortBy=date&language=en&category=Politics'
+    url = f'https://api.goperigon.com/v1/all?apiKey={news_api_key}&from=2024-07-26&country\
+            =us&sourceGroup=top100&showNumResults=true&showReprints=false&excludeLabel=Non\
+            -news&excludeLabel=Opinion&excludeLabel=Paid%20News&excludeLabel=Roundup&excludeLabel\
+            =Press%20Release&sortBy=date&language=en&category=Politics'
     content = utils.load_json(url, 'news')
 
     filename = utils.get_filename('news')
@@ -30,17 +33,18 @@ def get_news_perignon():
         news_title = n['title']
         news_description = n['description']
 
-        news_article = article_objects.News(news_article_id, news_url, news_source, news_pub_date, news_title, news_description)
+        news_article = article_objects.News(news_article_id, news_url, news_source,\
+                                            news_pub_date, news_title, news_description)
         news_code = cap_code(news_article)
         news_article.add_cap_code(news_code)
 
         news_article.write_to_csv(filename)
-        placeholders = vars(news_article)
-    
+
         news_article.send_query()
 
 
 def get_news_google_rss():
+    """get news from google news' rss feed"""
 
     url = 'https://news.google.com/rss/search?hl=en-US&gl=US&ceid=US%3Aen&oc=11&q=politics'
     rss_feed: ET = utils.load_rss(url)
@@ -55,12 +59,13 @@ def get_news_google_rss():
         news_title = item.find('title').text
         news_description = item.find('description').text
 
-        news_article = article_objects.News(news_article_id, news_url, news_source, news_pub_date, news_title, news_description)
+        news_article = article_objects.News(news_article_id, news_url, news_source,\
+                                            news_pub_date, news_title, news_description)
         news_code = cap_code(news_article)
         news_article.add_cap_code(news_code)
 
-        news_article.write_to_csv(filename)      
-        news_article.send_query()
+        news_article.write_to_csv(filename)
+        #news_article.send_query()
 
 
 def cap_code(news_article: article_objects.News):
@@ -78,4 +83,3 @@ def cap_code(news_article: article_objects.News):
 if __name__ == '__newsCoding__':
     #get_news_perignon()
     get_news_google_rss()
-    batch_news_to_hugging_face()

@@ -1,5 +1,6 @@
-import newsCoding
-import billCoding
+"""main"""
+import news_coding
+import bill_coding
 from utils import project_utils as utils
 
 
@@ -8,5 +9,5 @@ if __name__ == '__main__':
     utils.move_csvs_to_archive('bill')
     utils.move_csvs_to_archive('news')
 
-    #billCoding.get_bills()
-    newsCoding.get_news_google_rss()
+    #bill_coding.get_bills()
+    news_coding.get_news_google_rss()

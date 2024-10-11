@@ -9,7 +9,7 @@ class Article:
     """Barebone description of either a Bill or News Article"""
 
     def __init__(self, title, url):
-        self.title: str = title
+        self.title: str = title.replace('|', '')
         self.url: str = url
         self.cap_code = 0
 
