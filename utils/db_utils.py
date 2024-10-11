@@ -1,6 +1,6 @@
 """Module to manage all db connection functionality"""
-from psycopg2 import sql
 import psycopg2
+from psycopg2 import sql, pool
 
 
 def compose_query(query, table):
@@ -19,11 +19,11 @@ class PostGreManager:
     def connect(self):
         """connect to postgres using configuration saved elsewhere"""
         try:
-            self.connection_pool = psycopg2.pool.SimpleConnectionPool(
+            self.connection_pool = pool.SimpleConnectionPool(
                 1,
                 20,
                 host = self.config['HOST'],
-                database = self.config['DATABASE'],
+                database = self.config['DBNAME'],
                 user = self.config['USER'],
                 password = self.config['PASSWORD']
             )

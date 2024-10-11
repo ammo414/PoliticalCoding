@@ -37,32 +37,36 @@ class Article:
             writer = csv.writer(csvfile, delimiter='|')
             writer.writerow(row)
 
-    def send_query(self):
-        """sends an insert query to the database"""
+    def send_sql_statement(self):
+        """sends an INSERT statement to the database"""
         db = pgm(constants.db_config)
         placeholders = vars(self)
         print(placeholders)
-        if isinstance(self, News):
-            if len(placeholders) == 7:
-                return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)',
-                'news', placeholders.values())
+        db.connect()
+        try:
+            if isinstance(self, News):
+                if len(placeholders) == 7:
+                    return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                    'news', placeholders.values())
+
+                else:
+                    print(f'Row length mishap. Look at {self.article_id} for more info')
+                    return False
+
+            elif isinstance(self, Bill):
+                if len(placeholders) == 8:
+                    return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+                    'bill', placeholders.values())
+
+                else:
+                    print(f'Row length mishap. Look at {self.number} for more info')
+                    return False
 
             else:
-                print(f'Row length mishap. Look at {self.article_id} for more info')
+                print(f"Article {self.title} is neither News or Bill. Check call")
                 return False
-
-        elif isinstance(self, Bill):
-            if len(placeholders) == 8:
-                return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
-                'bill', placeholders.values())
-
-            else:
-                print(f'Row length mishap. Look at {self.number} for more info')
-                return False
-
-        else:
-            print(f"Article {self.title} is neither News or Bill. Check call")
-            return False
+        finally:
+            db.close()
 
 
 class News(Article):

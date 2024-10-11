@@ -39,7 +39,7 @@ def get_news_perignon():
         news_article.add_cap_code(news_code)
 
         news_article.write_to_csv(filename)
-        news_article.send_query()
+        news_article.send_sql_statement()
 
 
 def get_news_google_rss():
@@ -64,7 +64,7 @@ def get_news_google_rss():
         news_article.add_cap_code(news_code)
 
         news_article.write_to_csv(filename)
-        news_article.send_query()
+        news_article.send_sql_statement()
 
 
 def cap_code(news_article: article_objects.News):
@@ -76,7 +76,7 @@ def cap_code(news_article: article_objects.News):
     return llm_utils.classify_text_with_huggingface(news_text, 'news')
 
     # perplexity approach: too (monetarily) costly
-    # message_str = llm_utils.send_to_open_ai(news_article)
+    # message_str = llm_utils.send_to_open_ai(news_text)
 
 
 if __name__ == '__newsCoding__':
