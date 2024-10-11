@@ -1,5 +1,11 @@
-""" Module to manage all db connection functionality"""
+"""Module to manage all db connection functionality"""
+from psycopg2 import sql
 import psycopg2
+
+
+def compose_query(query, table):
+    """uses the psycopg2.sql module to safely create SQL statements""" 
+    return sql.SQL(query).format(sql.Identifier(table))
 
 
 class PostGreManager:
@@ -15,34 +21,35 @@ class PostGreManager:
         try:
             self.connection_pool = psycopg2.pool.SimpleConnectionPool(
                 1,
-                20,               
+                20,
                 host = self.config['HOST'],
                 database = self.config['DATABASE'],
                 user = self.config['USER'],
                 password = self.config['PASSWORD']
             )
             return True
-        except (Exception, psycopg2.Error) as error:
+        except psycopg2.Error as error:
             print('Error while connecting to PostGreSQL', error)
             return False
 
 
     def execute_query(self, query: str, table, parameters):
-        """executes query. If query is a select statement, then returns results."""
+        """executes statement. If statement is a query, then returns results."""
         connection = None
         cursor = None
-        try: 
+        try:
             connection = self.connection_pool.getconn()
             cursor = connection.cursor()
-            cursor.execute(query)
+            formatted_query = compose_query(query, table)
+            cursor.execute(formatted_query, parameters)
             connection.commit()
             if query.upper().startswith('SELECT'):
                 result = cursor.fetchall() # result of select statement
                 return result
-            else:
-                connection.commit()
-                return True
-        except (Exception, psycopg2.Error) as error:
+
+            connection.commit()
+            return True
+        except psycopg2.Error as error:
             print('Error executing query', error)
             return False
         finally:

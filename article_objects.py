@@ -23,7 +23,7 @@ class Article:
         self.cap_code = cap_code
 
     def get_title(self):
-        """ gets title or None"""
+        """gets title or None"""
         try:
             return self.title
         except AttributeError as error:
@@ -35,7 +35,7 @@ class Article:
         row = vars(self).values()
         with open(filename, 'a', newline='', encoding="utf-8") as csvfile:
             writer = csv.writer(csvfile, delimiter='|')
-            writer.writerow(row)        
+            writer.writerow(row)
 
     def send_query(self):
         """sends an insert query to the database"""
