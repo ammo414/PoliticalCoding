@@ -39,7 +39,6 @@ def get_news_perignon():
         news_article.add_cap_code(news_code)
 
         news_article.write_to_csv(filename)
-
         news_article.send_query()
 
 
@@ -54,7 +53,7 @@ def get_news_google_rss():
     for item in rss_feed.iter('item'):
         news_article_id = item.find('guid').text
         news_url = item.find('link').text
-        news_source = news_url.split('.com')[0][8:] #everything before ".com" and after "https://"
+        news_source = news_url.split('-')[-1] # last bit of the title always contains the source
         news_pub_date = item.find('pubDate').text
         news_title = item.find('title').text
         news_description = item.find('description').text
@@ -65,7 +64,7 @@ def get_news_google_rss():
         news_article.add_cap_code(news_code)
 
         news_article.write_to_csv(filename)
-        #news_article.send_query()
+        news_article.send_query()
 
 
 def cap_code(news_article: article_objects.News):

@@ -41,10 +41,10 @@ class Article:
         """sends an insert query to the database"""
         db = pgm(constants.db_config)
         placeholders = vars(self)
-
+        print(placeholders)
         if isinstance(self, News):
-            if len(placeholders) == 6:
-                return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s)',
+            if len(placeholders) == 7:
+                return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)',
                 'news', placeholders.values())
 
             else:
@@ -52,8 +52,8 @@ class Article:
                 return False
 
         elif isinstance(self, Bill):
-            if len(placeholders) == 7:
-                return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)',
+            if len(placeholders) == 8:
+                return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
                 'bill', placeholders.values())
 
             else:
