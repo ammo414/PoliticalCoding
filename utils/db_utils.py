@@ -33,7 +33,7 @@ class PostGreManager:
             return False
 
 
-    def execute_query(self, query: str, table, parameters):
+    def exec_query(self, query: str, table, parameters=None):
         """executes statement. If statement is a query, then returns results."""
         connection = None
         cursor = None
@@ -57,6 +57,21 @@ class PostGreManager:
                 cursor.close()
             if connection:
                 self.connection_pool.putconn(connection)
+
+    def create_table_if_not_exist(self, which_type):
+        """creates table if they don't already exist"""
+        if which_type == 'news':
+            self.exec_query('CREATE TABLE {} IF NOT EXIST \
+                (title text NOT NULL, url text NOT NULL, cap_code text, article_id text PRIMARY,\
+                     source text, pub_date timestamp with time zone, description text)',
+                    'news')
+        elif which_type == 'bill':
+            self.exec_query('CREATE TABLE {} IF NOT EXIST \
+                (title text NOT NULL, url text NOT NULL, cap_code text, number integer PRIMARY,\
+                    committees text[], policy_area text, bill_type text, congress integer)',
+                    'bill')
+        else:
+            print('Wrong type. Please check')
 
 
     def close(self):

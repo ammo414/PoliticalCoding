@@ -9,5 +9,5 @@ if __name__ == '__main__':
     utils.move_csvs_to_archive('bill')
     utils.move_csvs_to_archive('news')
 
-    #bill_coding.get_bills()
+    bill_coding.get_bills()
     news_coding.get_news_google_rss()

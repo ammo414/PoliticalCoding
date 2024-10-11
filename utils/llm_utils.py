@@ -1,56 +1,7 @@
 """Module of all LLM functions"""
 
-import time
-from openai import OpenAI
 import torch
 from transformers import (AutoModelForSequenceClassification, AutoTokenizer)
-
-from utils import constants
-
-
-def send_to_open_ai(news_text):
-    """
-    function to query open_ai llm models 
-    in this case, perplexity is piggybacking off of openAi's library
-    if perplexity is needed for tasks other than labeling news articles, then a refactor is needed
-    """
-
-    chat_request_text = f'text:{news_text}.\n Possible categories: macroeconomics, civil rights, \
-        health, agriculture, labor, education, environment, energy, immigration, transportation, \
-        law and crime, social welfare, housing, domestic commerce, defense, technology, \
-        foreign trade, international affairs, government operations, public lands, culture.\
-        \n Select a single category.'
-
-    message = [
-        {
-            'role': 'system',
-            'content': (
-                'You are to catalog political headlines into exactly one of a number of categories.\
-                Please identify the best category for each headline and respond with only that. \
-                If no category is appropriate, say "0" and nothing else.'
-            ),
-        },
-        {
-            'role': 'user',
-            'content': ( chat_request_text ),
-        },
-    ]
-
-    llm_api_key = constants.OPENAI_API_KEY
-    llm_base_url = constants.OPENAI_URL
-    llm_model = constants.OPENAI_MODEL
-
-    time.sleep(2)
-
-    client = OpenAI(api_key=llm_api_key, base_url=llm_base_url)
-
-    response = client.chat.completions.create(
-        model = llm_model,
-        messages=message
-    )
-
-    ## perplexity's response structure. update this if using a model with a different structure
-    return response['choices']['0']['message']['content']
 
 
 def classify_text_with_huggingface(text, which_data):

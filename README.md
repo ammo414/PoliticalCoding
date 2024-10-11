@@ -15,4 +15,4 @@ TODO:
 
 - [ ] Write unit tests
 
-- [ ] Document PostGre queries and screenshots of visualizations
+- [ ] Document PostGre queries and screenshots of Superset visualizations

@@ -1,4 +1,4 @@
-""" Classes to describe News or Bill articles."""
+"""Classes to describe News or Bill articles."""
 import csv
 
 from utils import constants
@@ -9,7 +9,7 @@ class Article:
     """Barebone description of either a Bill or News Article"""
 
     def __init__(self, title, url):
-        self.title: str = title.replace('|', '')
+        self.title: str = title
         self.url: str = url
         self.cap_code = 0
 
@@ -34,7 +34,7 @@ class Article:
         """appends row to csv"""
         row = vars(self).values()
         with open(filename, 'a', newline='', encoding="utf-8") as csvfile:
-            writer = csv.writer(csvfile, delimiter='|')
+            writer = csv.writer(csvfile, delimiter='^')
             writer.writerow(row)
 
     def send_sql_statement(self):
@@ -46,8 +46,8 @@ class Article:
         try:
             if isinstance(self, News):
                 if len(placeholders) == 7:
-                    return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)',
-                    'news', placeholders.values())
+                    return db.exec_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                    'news', tuple(placeholders.values()))
 
                 else:
                     print(f'Row length mishap. Look at {self.article_id} for more info')
@@ -55,8 +55,8 @@ class Article:
 
             elif isinstance(self, Bill):
                 if len(placeholders) == 8:
-                    return db.execute_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
-                    'bill', placeholders.values())
+                    return db.exec_query('INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)',
+                    'bill', tuple(placeholders.values()))
 
                 else:
                     print(f'Row length mishap. Look at {self.number} for more info')

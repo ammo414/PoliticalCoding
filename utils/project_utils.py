@@ -13,7 +13,7 @@ def load_json(url, which_data):
     """loads json and returns content"""
 
     time.sleep(1)
-    response = requests.get(url, timeout=1)
+    response = requests.get(url, timeout=5)
     content = response.json()
 
     if which_data == 'bill':
@@ -25,14 +25,14 @@ def load_json(url, which_data):
             print(f'{content_type} content type. You\'ll need to fix that.')
             return None
 
-    elif which_data == 'news':
-        pass # haven't seen any errors yet
+    # not currently using json for news, but space is here if things change
 
     return content
 
 
 def load_rss(url):
     """loads rss into an xlm tree"""
+    time.sleep(1)
     response = requests.get(url, timeout=1)
     rss_feed = ET.fromstring(response.text)
 
