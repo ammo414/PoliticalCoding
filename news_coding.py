@@ -29,6 +29,7 @@ def get_news_google_rss():
         news_article.add_cap_code(news_code)
 
         news_article.write_to_csv(filename)
+        
         #news_article.send_sql_statement()
 
 

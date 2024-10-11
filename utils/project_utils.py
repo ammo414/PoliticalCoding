@@ -56,6 +56,6 @@ def get_filename(which_data):
     creates filename for csvs for both bills and news
     which_data should be either 'bill' or 'news'
     """
-    now = datetime.now().strftime('%d-%m-%y|%H:%M')
+    now = datetime.now().strftime('%m-%d-%y|%H:%M')
     filename = f'{which_data}|{now}.csv'
     return filename

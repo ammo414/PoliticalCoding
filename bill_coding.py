@@ -35,7 +35,7 @@ def get_bills():
 
         bill = article_objects.Bill(bill_number, bill_title, bill_url, bill_committees,
                                     bill_policy_area, bill_type, bill_congress)
-                                    
+
         code = cap_code(bill)
         bill.add_cap_code(code)
 
@@ -51,7 +51,6 @@ def cap_code(bill: article_objects.Bill) -> str:
         policy_area = ""
     committees = bill.get_committees()
     title = bill.get_title()
-    print(title)
 
     #huggingface
     committee_string = '|'.join(committees)
