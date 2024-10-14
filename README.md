@@ -2,7 +2,7 @@
 
 Is there a difference in what senators and representatives are discussing in congress and what is being discussed in the news? The best way to answer that is by collecting immense amounts of data from both sources, classifying topics, and comparing the overall landscape of what each group is discussing.
 
-This is a project to ingest congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and to classify topics with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3). We use [Airflow](https://airflow.apache.org/) to load data into a (Supbase) PostGreSQL database daily, which will then be connected to a [Superset](https://superset.apache.org/) instance for data analysis.
+This is a project to ingest congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and to classify topics with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3). We use [Airflow](https://airflow.apache.org/) to load data into a (Supabase) PostGreSQL database daily, which will then be connected to a [Superset](https://superset.apache.org/) instance for data analysis.
 
 TODO:
 
@@ -37,7 +37,7 @@ AND
     cap_code NOT LIKE 'Government Operations'
 ```
 
-will likely remove too much. For instance, if Trump starts talking about voter fraud again, that will likely be filtered out with this statement even though I would prefer to see that in the results.
+will likely remove too much. For instance, if Trump starts talking about voter fraud again, that would be filtered out with this statement even though I'd prefer to see that in the results.
 
 I found that about 34% of all rows were labeled 'Government Operations', most of which had to do with the election. On the other hand, in 2015, about 9% of all US bills and about 9% of the NYT front page were related to Government Operations, according to the [Comparative Agendas Trend Tool](https://www.comparativeagendas.net/tool) (2015 is the last full year of data on the site.)
 
@@ -55,7 +55,7 @@ Airflow is cool. That's really about all there is to say here. I've used chron j
 
 #### HuggingFace
 
-I'm grateful that the [poltextlab](https://poltextlab.com/) decided to train text classification models on this domain and made them publicly available on HuggingFace. And I'm grateful that HuggingFace's transformers library is so easy to use. If it weren't for these models, I would likely have used a random text generation model to act as a text classifier, which likely would've been much less accurate. I'm also glad I didn't have any reason to consider fine tuning my own model on my personal laptop with no GPU.
+I'm grateful that the [poltextlab](https://poltextlab.com/) decided to train text classification models on this domain and made them publicly available on HuggingFace. And I'm grateful that HuggingFace's transformers library is so easy to use. If it weren't for these models, I would have used a random text generation model to act as a text classifier, which likely would've been much less accurate. I'm also glad I didn't have any reason to consider fine tuning my own model on my personal laptop with no GPU.
 
 #### Better Python
 
