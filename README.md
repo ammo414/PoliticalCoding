@@ -27,7 +27,7 @@ While this is an important limitation to point out, I found that it actually did
 
 #### Quality of Data
 
-Starting this project in September 2024 was an awful idea: with national elections right around the corner, a lot of the news is about Trump and Harris. Rightly so, sure, but ultimately, most of that data isn't relevant for this project. That Trump calls CBS's editing of Harris's a scandal, or a review of San Francisco's brutal politics' shaping of Harris, isn't really actionable data. On the other hand, Harris's criticism of Trump's "playing politics" with hurricane disaster relief is. Its hard to filter out data in such a way that isn't inherently biased: a statement like
+Starting this project in September 2024 was an awful idea: with national elections right around the corner, a lot of the news is about Trump and Harris. Rightly so, sure, but ultimately, most of that data isn't relevant for this project. Trump calling CBS's editing of Harris's interview a scandal, or a review of San Francisco's brutal politics' shaping of Harris's politics, isn't really actionable data. On the other hand, Harris's criticism of Trump's "playing politics" with hurricane disaster relief is. Its hard to filter out data in such a way that isn't inherently biased: a statement like
 
 ```sql
 SELECT * FROM news
