@@ -1,4 +1,4 @@
-# Political Coding
+# Political Bills and Media Analysis Pipeline
 
 Is there a difference in what senators and representatives are discussing in congress and what is being discussed in the news? The best way to answer that is by collecting immense amounts of data from both sources, classifying topics, and comparing the overall landscape of what each group is discussing.
 
