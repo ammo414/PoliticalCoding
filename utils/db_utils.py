@@ -8,6 +8,24 @@ def compose_query(query, table):
     return sql.SQL(query).format(sql.Identifier(table))
 
 
+def create_bill_table():
+    """returns statements to check if 'bill' table exists and, if not, creates it"""
+    statement = 'CREATE TABLE {} IF NOT EXIST \
+                (title text NOT NULL, url text NOT NULL, cap_code text, article_id text PRIMARY,\
+                     source text, pub_date timestamp with time zone, description text)'
+    table = 'bill'
+    return statement, table
+
+
+def create_news_table():
+    """returns statements to check if 'news' table exists and, if not, creates it"""
+    statement = 'CREATE TABLE {} IF NOT EXIST \
+                (title text NOT NULL, url text NOT NULL, cap_code text, number integer PRIMARY,\
+                    committees text[], policy_area text, bill_type text, congress integer)'
+    table = 'news'
+    return statement, table
+
+
 class PostGreManager:
     """
     Manages all db connection functionality
