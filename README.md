@@ -1,5 +1,6 @@
 # Political Bills and Media Analysis Pipeline
 
+## Project Description
 Is there a difference in what senators and representatives are discussing in congress and what is being discussed in the news? The best way to answer that is by collecting immense amounts of data from both sources, classifying topics, and comparing the overall landscape of what each group is discussing.
 
 This is a project to ingest congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and to classify topics with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3). We use [Airflow](https://airflow.apache.org/) to load data into a (Supabase) PostGreSQL database daily, which will then be connected to a [Superset](https://superset.apache.org/) instance for data analysis.
@@ -8,6 +9,47 @@ TODO:
 
 - [ ] enum everywhere
 - [ ] Write unit tests
+
+## (Some) Documentation
+
+Currently, you will need to create a constants.py with the following information:
+
+```python
+db_config = {
+    "HOST" : 'host',
+    "DBNAME" : 'dbname',
+    "USER" : 'user',
+    "PASSWORD" : 'password' 
+}
+
+CONGRESS_API_KEY = 'congress_key'
+```
+
+The two tables that will be created in your database have the following schema:
+
+![db schema of news and bill](<images/schema-bills and news.png>)
+
+```sql
+Table bill {
+  number integer pk
+  title text
+  url text
+  cap_code text
+  committees text[]
+  policy_area text
+  bill_type text
+  congress integer 
+}
+
+Table news {
+  article_id text pk
+  title text
+  url text
+  source text
+  pub_date timestamptz
+  description text
+}
+```
 
 ## Analysis of Project
 
@@ -64,3 +106,9 @@ A lot of the bigger struggles with this project was deciding where certain funct
 ### Conclusion
 
 I said that I will wrap up this project soon, but I will likely revisit after the elections. It would be nice to have better news data, but as previously mentioned, the models already do a great job. Overall, though, while I wouldn't call this project a complete success, I am glad that I did this and am excited to apply what I learned in other projects.
+
+### Current Analytics
+
+A screenshot of my superset dashboard at the moment
+![superset dashboard of articles over time by cap code, and overall composition of cap codes for articles and for bills](<images/superset-screenshot.png>)
+
