@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     db = db_utils.PostGreManager(constants.db_config)
     if db.connect():
-        
+
         # create tables in database if not already present
         bill_statement, bill_table = db_utils.create_bill_table()
         db.exec_query(bill_statement, bill_table)
