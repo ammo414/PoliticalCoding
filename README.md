@@ -28,7 +28,7 @@ CONGRESS_API_KEY = 'congress_key'
 
 The two tables that will be created in your database have the following schema:
 
-![db schema of news and bill](images/schema-bills and news.png)
+![db schema of news and bill](images/schema-bills-and-news.png)
 
 ```sql
 Table bill {
