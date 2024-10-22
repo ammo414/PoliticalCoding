@@ -1,4 +1,4 @@
-"""Classes to describe News or Bill articles."""
+""" Classes to describe News or Bill articles."""
 
 import csv
 
@@ -87,7 +87,7 @@ class News(Article):
 
     def __init__(self, article_id, url, source, pub_date, title, description):
         Article.__init__(self, title, url)
-        self.article_id: int = article_id
+        self.article_id: str = article_id
         self.source: str = source
         self.pub_date: str = pub_date
         self.description: str = description

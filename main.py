@@ -21,7 +21,7 @@ if __name__ == "__main__":
         print("news success")
         db.close()
         # do the data
-        bill_coding.get_bills()
+        #bill_coding.get_bills()
         news_coding.get_news_google_rss()
     else:
         print()

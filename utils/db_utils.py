@@ -9,15 +9,16 @@ def compose_query(query, table):
     return sql.SQL(query).format(sql.Identifier(table))
 
 
-def create_bill_table():
+def create_news_table():
     """returns statements to check if 'bill' table exists and, if not, creates it"""
     statement = (
         "CREATE TABLE IF NOT EXISTS {}"
         "("
-        "article_id integer primary key,"
+        "id serial primary key,"
         "title text not null,"
         "url text not null,"
         "cap_code text,"
+        "article_id text,"
         "source text,"
         "pub_date timestamp with time zone,"
         "description text"
@@ -27,7 +28,7 @@ def create_bill_table():
     return statement, table
 
 
-def create_news_table():
+def create_bill_table():
     """returns statements to check if 'news' table exists and, if not, creates it"""
     statement = (
         "CREATE TABLE IF NOT EXISTS {}"
