@@ -10,9 +10,10 @@ if __name__ == "__main__":
     utils.move_csvs_to_archive("bill")
     utils.move_csvs_to_archive("news")
 
-    # create tables in database if not already present
     db = db_utils.PostGreManager(constants.db_config)
     if db.connect():
+        
+        # create tables in database if not already present
         bill_statement, bill_table = db_utils.create_bill_table()
         db.exec_query(bill_statement, bill_table)
         print("bill success")
@@ -20,8 +21,9 @@ if __name__ == "__main__":
         db.exec_query(news_statement, news_table)
         print("news success")
         db.close()
+
         # do the data
-        #bill_coding.get_bills()
+        bill_coding.get_bills()
         news_coding.get_news_google_rss()
     else:
         print()

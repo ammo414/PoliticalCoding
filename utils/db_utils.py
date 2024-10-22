@@ -14,11 +14,10 @@ def create_news_table():
     statement = (
         "CREATE TABLE IF NOT EXISTS {}"
         "("
-        "id serial primary key,"
         "title text not null,"
         "url text not null,"
         "cap_code text,"
-        "article_id text,"
+        "article_id text primary key,"
         "source text,"
         "pub_date timestamp with time zone,"
         "description text"
