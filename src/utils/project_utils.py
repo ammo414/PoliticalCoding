@@ -8,7 +8,6 @@ import xml.etree.ElementTree as ET
 
 import requests
 
-
 def load_json(url, which_data):
     """loads json and returns content"""
 
