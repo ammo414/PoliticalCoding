@@ -11,22 +11,6 @@ def compose_query(query, table):
     )
 
 
-def create_news_table():
-    """returns statements to check if 'bill' table exists and, if not, creates it"""
-    statement = (
-        "CREATE TABLE IF NOT EXISTS {}"
-        "("
-        "title text not null,"
-        "url text not null,"
-        "cap_code text,"
-        "article_id text primary key,"
-        "source text,"
-        "pub_date timestamp with time zone,"
-        "description text"
-        ");"
-    )
-    table = "news"
-    return statement, table
 
 
 def create_bill_table():

@@ -4,6 +4,25 @@ from utils import constants, llm_utils, project_utils as utils
 import article_objects
 
 
+def create_bill_table():
+    """returns statements to check if 'news' table exists and, if not, creates it"""
+    statement = (
+        "CREATE TABLE IF NOT EXISTS {}"
+        "("
+        "title text not null,"
+        "url text not null,"
+        "cap_code text,"
+        "number integer primary key,"
+        "committees text[],"
+        "policy_area text,"
+        "bill_type text,"
+        "congress integer"
+        ");"
+    )
+    table = "bill"
+    return statement, table
+
+
 def get_bills():
     """
     main function. creates csv, unpacks and processes JSON, writes data to csv
@@ -35,7 +54,7 @@ def get_bills():
         try:
             bill_introduced_date = bill_content["bill"]["introducedDate"]
         except KeyError:
-            bill_introduced_date = None #should never happen
+            bill_introduced_date = None  # should never happen
 
         # committee
         bill_committees_url = bill_url + "/committees?api_key=" + congress_api_key
@@ -50,7 +69,7 @@ def get_bills():
             bill_policy_area,
             bill_type,
             bill_congress,
-            bill_introduced_date
+            bill_introduced_date,
         )
 
         if not bill.in_table():

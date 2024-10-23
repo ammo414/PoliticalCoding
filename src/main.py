@@ -14,10 +14,10 @@ if __name__ == "__main__":
     if db.connect():
 
         # create tables in database if not already present
-        bill_statement, bill_table = db_utils.create_bill_table()
+        bill_statement, bill_table = bill_coding.create_bill_table()
         db.exec_query(bill_statement, bill_table)
         print("bill connection success")
-        news_statement, news_table = db_utils.create_news_table()
+        news_statement, news_table = news_coding.create_news_table()
         db.exec_query(news_statement, news_table)
         print("news connection success")
         db.close()

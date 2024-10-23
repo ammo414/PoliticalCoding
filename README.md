@@ -61,15 +61,15 @@ Other than minor technical nitpicks (what's test coverage?), I would say that th
 
 Getting media news data has been a struggle since the first day of this project. While there are many news APIs, such as newsapi, perignon, and newscatcher, they all, reasonably, cost money to use, which I didn't want to spend. I figured that the next best thing would be to recreate those APIs by going directly to the source -- the rss feeds that I assumed that all these APIs used to populate their databases. Unfortunately, as [newscatcher](https://www.newscatcherapi.com/blog/top-4-free-and-open-ource-news-api-alternatives) themselves point out, any news site can shut down their rss feed without notice, which is exactly what some of the news sites that I explored did.
 
-I decided to use Google News' rss feed functionality, but there were major drawbacks: paywalls meant that I couldn't scrape the html itself for these sites, which meant that the only text data I had for each article was its title.
+I decided to use Google News' rss feed functionality, but there were major drawbacks: I couldn't scrape the html itself because of paywalls, which meant that the only text data I had for each article was its title.
 
 A similar issue arose with the Library of Congress's API. The Library exposes bills, etc. data before they have been transcribed into text. That is, only scans of the original bills are present, which, again, means that I don't have much text data for each bill.
 
-While this is an important limitation to point out, I found that it actually didn't impact cap code labeling as much as I thought it would. The only arguably incorrect labels had to do with hurricane relief. While I would personally label those topics as 'Environment', the model opted to label them as 'Domestic Commerce'. That does make sense, it just doesn't make as much sense as 'Environment' does to me.
+While this is an important limitation to point out, I found that it actually didn't impact cap code labeling as much as I thought it would. The only arguably incorrect labels had to do with recent hurricane relief. While I would personally label those topics as 'Environment', the model opted to label them as 'Domestic Commerce'. That does make sense, it just doesn't make as much sense as 'Environment' does to me.
 
 #### Quality of Data
 
-Starting this project in September 2024 was an awful idea: with national elections right around the corner, a lot of the news is about Trump and Harris. Rightly so, sure, but ultimately, most of that data isn't relevant for this project. Trump calling CBS's editing of Harris's interview a scandal, or a review of San Francisco's brutal politics' shaping of Harris's politics, isn't really actionable data. On the other hand, Harris's criticism of Trump's "playing politics" with hurricane disaster relief is. Its hard to filter out data in such a way that isn't inherently biased: a statement like
+Starting this project in September 2024 was an awful idea: with national elections right around the corner, a lot of the news is about Trump and Harris. Rightly so, sure, but ultimately, most of that data isn't relevant for this project. Trump calling CBS's editing of Harris's interview a scandal, or a review of San Francisco's brutal politics' shaping of Harris's politics, isn't really actionable data. On the other hand, Harris's criticism of Trump's "playing politics" with hurricane disaster relief is. Its hard to filter out data in such a way that isn't inherently biased: even a statement like
 
 ```sql
 SELECT * FROM news
@@ -83,17 +83,40 @@ will likely remove too much. For instance, if Trump starts talking about voter f
 
 I found that about 57% of all rows were labeled 'Government Operations', most of which had to do with the election. Drilling down, about 34% of all media articles and 7.5% of and bills were labeled as such. To compare, in 2015, about 9% of all US bills and about 9% of the NYT front page were related to Government Operations, according to the [Comparative Agendas Trend Tool](https://www.comparativeagendas.net/tool) (2015 is the last full year of data on the site.)
 
+```sql
+with
+  cte as (
+    select
+      (
+        select
+          sum(bill_count + news_count)
+        from
+          cap_code_pivot
+        where
+          cap_code like 'Government Operations'
+      ) as gov_op_count,
+      sum(bill_count + news_count) as total_count
+    from
+      cap_code_pivot
+  )
+select
+  gov_op_count, total_count, round((gov_op_count / total_count), 2) as gov_op_fraction
+from
+  cte
+```
+
+| gov_op_count | total_count | gov_op_fraction |
+| ------------ | ----------- | --------------- |
+| 159          | 281         | 0.57            |
+
 ### Things learned
 
-Postgres, Airflow, HuggingFace. Better Python.
+Postgres, HuggingFace. Better Python.
 
 #### Postgres
 
 This project unfortunately didn't get to use any particularly interesting aspects of Postgres, other than maybe its more robust handling of text data over the SQL standard VARCHAR(255). Still, I learned a bit of database admin when I tried spinning up my own local server to connect to, and had an excuse to use [Supabase](https://supabase.com/) when I realized that that was the much better route and fit perfectly for my needs.
 
-#### Airflow
-
-Airflow is cool. That's really about all there is to say here. I've used chron jobs in the past, but with anything even remotely complex, a DAG is almost necessarily the way to go. Being able to query data only after ensuring that the database is properly set up and being able to painlessly assign tasks to be run in parallel is a great boon that ensures data safety.
 
 #### HuggingFace
 
