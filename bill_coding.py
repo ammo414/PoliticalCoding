@@ -31,9 +31,11 @@ def get_bills():
             bill_policy_area = bill_content["bill"]["policyArea"]["name"]
         except KeyError:
             bill_policy_area = None
-        
+
         try:
-            bill_pub_date = bill_content["bill"]["introducedDate"]
+            bill_introduced_date = bill_content["bill"]["introducedDate"]
+        except KeyError:
+            bill_introduced_date = None #should never happen
 
         # committee
         bill_committees_url = bill_url + "/committees?api_key=" + congress_api_key
@@ -48,6 +50,7 @@ def get_bills():
             bill_policy_area,
             bill_type,
             bill_congress,
+            bill_introduced_date
         )
 
         code = cap_code(bill)

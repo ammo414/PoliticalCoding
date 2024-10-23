@@ -76,16 +76,13 @@ class PostGreManager:
         connection = None
         cursor = None
         try:
+            formatted_query = compose_query(query, table)
             connection = self.connection_pool.getconn()
             cursor = connection.cursor()
-            formatted_query = compose_query(query, table)
             cursor.execute(formatted_query, parameters)
-            connection.commit()
             if query.upper().startswith("SELECT"):
                 result = cursor.fetchall()  # result of select statement
                 return result
-
-            connection.commit()
             return True
         except psycopg2.Error as error:
             print("Error executing query", error)
@@ -94,6 +91,7 @@ class PostGreManager:
             if cursor:
                 cursor.close()
             if connection:
+                connection.commit()
                 self.connection_pool.putconn(connection)
 
     def close(self):

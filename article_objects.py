@@ -62,9 +62,9 @@ class Article:
                     return False
 
             elif isinstance(self, Bill):
-                if len(placeholders) == 8:
+                if len(placeholders) == 9:
                     return db.exec_query(
-                        "INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                        "INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                         "bill",
                         tuple(placeholders.values()),
                     )
@@ -107,7 +107,7 @@ class Bill(Article):
     """
 
     def __init__(
-        self, number, title, url, committees, policy_area, bill_type, congress
+        self, number, title, url, committees, policy_area, bill_type, congress, introduced_date
     ):
         Article.__init__(self, title, url)
         self.number: int = number
@@ -115,6 +115,7 @@ class Bill(Article):
         self.policy_area: str = policy_area
         self.bill_type: str = bill_type
         self.congress: int = congress
+        self.introduced_date: str = introduced_date
 
     def get_committees(self):
         """gets committees"""
