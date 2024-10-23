@@ -6,7 +6,9 @@ from psycopg2 import sql, pool
 
 def compose_query(query, table):
     """uses the psycopg2.sql module to safely create SQL statements"""
-    return sql.SQL(query).format(sql.Identifier(table))
+    return sql.SQL(query).format(
+        sql.Identifier(table)
+    )
 
 
 def create_news_table():
@@ -79,6 +81,7 @@ class PostGreManager:
             formatted_query = compose_query(query, table)
             connection = self.connection_pool.getconn()
             cursor = connection.cursor()
+            print(formatted_query, parameters)
             cursor.execute(formatted_query, parameters)
             if query.upper().startswith("SELECT"):
                 result = cursor.fetchall()  # result of select statement
