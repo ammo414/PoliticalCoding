@@ -21,8 +21,7 @@ def return_bill_urls():
     """statement to select column of urls"""
     select_bill_url = "SELECT number, url FROM {} WHERE introduced_date is NULL"
     table = "bill"
-    params = ("number", "url", "introduced_date")
-    return select_bill_url, table, params
+    return select_bill_url, table
 
 
 def get_introduced_date(url_column):
@@ -43,7 +42,7 @@ if __name__ == "__main__":
         nc = new_column()
         db.exec_query(nc[0], nc[1])
         rbu = return_bill_urls()
-        bill_url = db.exec_query(rbu[0], rbu[1]) #, rbu[2])
+        bill_url = db.exec_query(rbu[0], rbu[1])
         ids_and_dates = get_introduced_date(bill_url)
         for number, date in ids_and_dates.items():
             db.exec_query((

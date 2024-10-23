@@ -17,9 +17,9 @@ def get_news_google_rss():
     for item in rss_feed.iter("item"):
         news_article_id = item.find("guid").text
         news_url = item.find("link").text
-        news_source = item.find("description").text
-        news_pub_date = item.find("pubDate").text
         news_title = item.find("title").text
+        news_source = news_title.split(' - ')[-1]
+        news_pub_date = item.find("pubDate").text
         news_description = news_title  # google news doesn't have any additional info
 
         news = article_objects.News(

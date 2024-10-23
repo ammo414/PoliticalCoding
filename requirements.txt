@@ -27,7 +27,6 @@ multidict==6.1.0
 multiprocess==0.70.16
 networkx==3.2.1
 numpy==1.26.3
-openai==1.51.2
 packaging==24.1
 pandas==2.2.3
 pathlib==1.0.1
