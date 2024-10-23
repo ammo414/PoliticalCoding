@@ -74,7 +74,7 @@ Starting this project in September 2024 was an awful idea: with national electio
 ```sql
 SELECT * FROM news
 WHERE
-    description NOT SIMILAR TO '%Trump%'|'%Harris%'
+    description NOT SIMILAR TO '%(Trump|Harris)%'
 AND
     cap_code NOT LIKE 'Government Operations'
 ```
