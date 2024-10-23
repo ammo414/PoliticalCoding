@@ -4,7 +4,7 @@
 
 Is there a difference in what senators and representatives are discussing in congress and what is being discussed in the news? The best way to answer that is by collecting immense amounts of data from both sources, classifying topics, and comparing the overall landscape of what each group is discussing.
 
-This is a project to ingest congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and to classify topics with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3). We use [Airflow](https://airflow.apache.org/) to load data into a (Supabase) PostGreSQL database daily, which is then be connected to a [Superset](https://superset.apache.org/) instance for data analysis.
+This is a project to ingest congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and to then classify those data's policy areas with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3) using the [Comparative Agendas Project's (cap)](https://www.comparativeagendas.net/us) schema. We use [Airflow](https://airflow.apache.org/) to load data into a (Supabase) PostGreSQL database daily, which is then connected to a [Superset](https://superset.apache.org/) instance for data analysis.
 
 TODO:
 
@@ -53,19 +53,19 @@ Table news {
 
 ## Analysis of Project
 
-Other than minor technical nitpicks (what's test coverage?), I would say that this project is ultimately complete. Getting more data than what I already have won't soon get me a better answer to the question I initially asked, for reasons I'll get into below. I learned a lot, however, from a purely technical programming aspect as well as learning more about HuggingFace, xmls and rss feeds, and a couple of other things.
+Other than minor technical nitpicks (what's test coverage?), I would say that this project is ultimately complete. Getting more data than what I already have won't soon get me a better answer to the question I initially asked, for reasons I'll get into below. I learned a lot, however, from a purely technical programming aspect as well as learning more about HuggingFace, databases, xmls and rss feeds, and a couple of other things.
 
 ### Issues
 
 #### Quality of Data Sources
 
-Getting media news data has been a struggle since the first day of this project. While there are many news APIs, such as newsapi, perignon, and newscatcher, they all, reasonably, cost money to use, which I didn't to spend. I figured that the next best thing would be to recreate those APIs by going directly to the source -- the rss feeds that I assumed that all these APIs used to populate their databases. Unfortunately, as [newscatcher](https://www.newscatcherapi.com/blog/top-4-free-and-open-ource-news-api-alternatives) themselves point out, any news site can shut down their rss feed without notice, which is exactly what some of the news sites that I explored did.
+Getting media news data has been a struggle since the first day of this project. While there are many news APIs, such as newsapi, perignon, and newscatcher, they all, reasonably, cost money to use, which I didn't want to spend. I figured that the next best thing would be to recreate those APIs by going directly to the source -- the rss feeds that I assumed that all these APIs used to populate their databases. Unfortunately, as [newscatcher](https://www.newscatcherapi.com/blog/top-4-free-and-open-ource-news-api-alternatives) themselves point out, any news site can shut down their rss feed without notice, which is exactly what some of the news sites that I explored did.
 
 I decided to use Google News' rss feed functionality, but there were major drawbacks: paywalls meant that I couldn't scrape the html itself for these sites, which meant that the only text data I had for each article was its title.
 
 A similar issue arose with the Library of Congress's API. The Library exposes bills, etc. data before they have been transcribed into text. That is, only scans of the original bills are present, which, again, means that I don't have much text data for each bill.
 
-While this is an important limitation to point out, I found that it actually didn't impact cap labeling as much as I thought it would. The only arguably incorrect labels had to do with hurricane relief. While I would personally label those topics as 'Environment', the model opted to label them as 'Domestic Commerce'. That does make sense, it just doesn't make as much sense as 'Environment' does to me.
+While this is an important limitation to point out, I found that it actually didn't impact cap code labeling as much as I thought it would. The only arguably incorrect labels had to do with hurricane relief. While I would personally label those topics as 'Environment', the model opted to label them as 'Domestic Commerce'. That does make sense, it just doesn't make as much sense as 'Environment' does to me.
 
 #### Quality of Data
 
