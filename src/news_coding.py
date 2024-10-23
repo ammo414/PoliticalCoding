@@ -24,6 +24,26 @@ def create_news_table():
     return statement, table
 
 
+def unpack_news_rss_content(item_et):
+    """unpacks rss_feed.iter("item") data"""
+
+    news_article_id = item_et.find("guid").text
+    news_url = item_et.find("link").text
+    news_title = item_et.find("title").text
+    news_source = news_title.split(" - ")[-1]
+    news_pub_date = item_et.find("pubDate").text
+    news_description = news_title  # google news doesn't have any additional info
+
+    return (
+        news_article_id,
+        news_url,
+        news_title,
+        news_source,
+        news_pub_date,
+        news_description,
+    )
+
+
 def get_news_google_rss():
     """get news from google news' rss feed"""
 
@@ -33,21 +53,9 @@ def get_news_google_rss():
     filename = utils.get_filename("news")
 
     for item in rss_feed.iter("item"):
-        news_article_id = item.find("guid").text
-        news_url = item.find("link").text
-        news_title = item.find("title").text
-        news_source = news_title.split(' - ')[-1]
-        news_pub_date = item.find("pubDate").text
-        news_description = news_title  # google news doesn't have any additional info
+        news_nibbles = unpack_news_rss_content(item)
 
-        news = article_objects.News(
-            news_article_id,
-            news_url,
-            news_source,
-            news_pub_date,
-            news_title,
-            news_description,
-        )
+        news = article_objects.News(*news_nibbles)
 
         if not news.in_table():
             news_code = cap_code(news)
@@ -63,9 +71,6 @@ def cap_code(news_article: article_objects.News):
     uses an LLM to find the best cap_code
     """
 
-    news_text = "|".join((news_article.get_title(), news_article.get_description()))
+    #news_text = "|".join((news_article.get_title(), news_article.get_description()))
+    news_text = news_article.get_title()
     return llm_utils.classify_text_with_huggingface(news_text, "news")
-
-
-if __name__ == "__news_coding__":
-    get_news_google_rss()

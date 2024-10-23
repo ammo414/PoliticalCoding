@@ -43,7 +43,7 @@ class Article:
         print(vars(self).values())
 
     def in_table(self):
-        """checks if article is already in table"""
+        """checks if article is already in database"""
         db = pgm(constants.db_config)
         db.connect()
         try:

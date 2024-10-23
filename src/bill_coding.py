@@ -74,7 +74,7 @@ def get_bills():
 
     for b in content["bills"]:
         bill_bits = unpack_bill_json_content(b, congress_api_key)
-        bill = article_objects.Bill(*(bill_bits))
+        bill = article_objects.Bill(*bill_bits)
 
         if not bill.in_table():
             code = cap_code(bill)
