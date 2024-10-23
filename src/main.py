@@ -14,7 +14,6 @@ if __name__ == "__main__":
     if db.connect():
 
         # create tables in database if not already present
-        """
         bill_statement, bill_table = bill_coding.create_bill_table()
         db.exec_query(bill_statement, bill_table)
         print("bill connection success")
@@ -22,7 +21,6 @@ if __name__ == "__main__":
         db.exec_query(news_statement, news_table)
         print("news connection success")
         db.close()
-        """
 
         # do the data
         bill_coding.get_bills()
