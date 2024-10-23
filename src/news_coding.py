@@ -7,7 +7,7 @@ import article_objects
 
 
 def create_news_table():
-    """returns statements to check if 'bill' table exists and, if not, creates it"""
+    """returns statements to check if 'news' table exists and, if not, creates it"""
     statement = (
         "CREATE TABLE IF NOT EXISTS {}"
         "("
@@ -36,7 +36,7 @@ def get_news_google_rss():
         news_article_id = item.find("guid").text
         news_url = item.find("link").text
         news_title = item.find("title").text
-        news_source = news_title.split(" - ")[-1]
+        news_source = news_title.split(' - ')[-1]
         news_pub_date = item.find("pubDate").text
         news_description = news_title  # google news doesn't have any additional info
 

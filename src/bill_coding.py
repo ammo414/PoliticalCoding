@@ -5,7 +5,7 @@ import article_objects
 
 
 def create_bill_table():
-    """returns statements to check if 'news' table exists and, if not, creates it"""
+    """returns statements to check if 'bill' table exists and, if not, creates it"""
     statement = (
         "CREATE TABLE IF NOT EXISTS {}"
         "("
@@ -23,6 +23,43 @@ def create_bill_table():
     return statement, table
 
 
+def unpack_bill_json_content(bill_json, congress_api_key):
+    """unpacks content['bills] data"""
+    bill_number = bill_json["number"]
+    bill_title = bill_json["title"].lower()
+    bill_url = bill_json["url"].replace("?format=json", "")
+    bill_type = bill_json["type"]
+    bill_congress = bill_json["congress"]
+    bill_content = utils.load_json(bill_url + "?api_key=" + congress_api_key, "bill")
+
+    # policy_area
+    try:
+        bill_policy_area = bill_content["bill"]["policyArea"]["name"]
+    except KeyError:
+        bill_policy_area = None
+
+    try:
+        bill_introduced_date = bill_content["bill"]["introducedDate"]
+    except KeyError:
+        bill_introduced_date = None  # should never happen
+
+    # committee
+    bill_committees_url = bill_url + "/committees?api_key=" + congress_api_key
+    bill_committees_content = utils.load_json(bill_committees_url, "bill")
+    bill_committees = [c["name"] for c in bill_committees_content["committees"]]
+
+    return (
+        bill_number,
+        bill_title,
+        bill_url,
+        bill_committees,
+        bill_policy_area,
+        bill_type,
+        bill_congress,
+        bill_introduced_date,
+    )
+
+
 def get_bills():
     """
     main function. creates csv, unpacks and processes JSON, writes data to csv
@@ -36,41 +73,8 @@ def get_bills():
     filename = utils.get_filename("bill")
 
     for b in content["bills"]:
-        bill_number = b["number"]
-        bill_title = b["title"].lower()
-        bill_url = b["url"].replace("?format=json", "")
-        bill_type = b["type"]
-        bill_congress = b["congress"]
-        bill_content = utils.load_json(
-            bill_url + "?api_key=" + congress_api_key, "bill"
-        )
-
-        # policy_area
-        try:
-            bill_policy_area = bill_content["bill"]["policyArea"]["name"]
-        except KeyError:
-            bill_policy_area = None
-
-        try:
-            bill_introduced_date = bill_content["bill"]["introducedDate"]
-        except KeyError:
-            bill_introduced_date = None  # should never happen
-
-        # committee
-        bill_committees_url = bill_url + "/committees?api_key=" + congress_api_key
-        bill_committees_content = utils.load_json(bill_committees_url, "bill")
-        bill_committees = [c["name"] for c in bill_committees_content["committees"]]
-
-        bill = article_objects.Bill(
-            bill_number,
-            bill_title,
-            bill_url,
-            bill_committees,
-            bill_policy_area,
-            bill_type,
-            bill_congress,
-            bill_introduced_date,
-        )
+        bill_bits = unpack_bill_json_content(b, congress_api_key)
+        bill = article_objects.Bill(*(bill_bits))
 
         if not bill.in_table():
             code = cap_code(bill)
