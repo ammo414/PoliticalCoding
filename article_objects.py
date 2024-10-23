@@ -42,17 +42,30 @@ class Article:
         """prints values for debugging"""
         print(vars(self).values())
 
+    def in_table(self):
+        """checks if article is already in table"""
+        db = pgm(constants.db_config)
+        db.connect()
+        if isinstance(self, News):
+            return db.exec_query(
+                "SELECT * FROM {} WHERE article_id = %s;", "news", (self.article_id,)
+            )
+        if isinstance(self, Bill):
+            return db.exec_query(
+                "SELECT * FROM {} WHERE number = %s;", "bill", (self.number,)
+            )
+        return None
+
     def insert_into_sql(self):
         """sends an INSERT statement to the database"""
-        db = pgm(constants.db_config)
         placeholders = vars(self)
-        print(placeholders)
+        db = pgm(constants.db_config)
         db.connect()
         try:
             if isinstance(self, News):
                 if len(placeholders) == 7:
                     return db.exec_query(
-                        "INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                        "INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s);",
                         "news",
                         tuple(placeholders.values()),
                     )
@@ -64,7 +77,7 @@ class Article:
             elif isinstance(self, Bill):
                 if len(placeholders) == 9:
                     return db.exec_query(
-                        "INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                        "INSERT INTO {} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);",
                         "bill",
                         tuple(placeholders.values()),
                     )
@@ -107,7 +120,15 @@ class Bill(Article):
     """
 
     def __init__(
-        self, number, title, url, committees, policy_area, bill_type, congress, introduced_date
+        self,
+        number,
+        title,
+        url,
+        committees,
+        policy_area,
+        bill_type,
+        congress,
+        introduced_date,
     ):
         Article.__init__(self, title, url)
         self.number: int = number

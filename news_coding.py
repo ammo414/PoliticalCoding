@@ -30,12 +30,14 @@ def get_news_google_rss():
             news_title,
             news_description,
         )
-        news_code = cap_code(news)
-        news.add_cap_code(news_code)
 
-        news.print_row()
-        news.write_to_csv(filename)
-        news.insert_into_sql()
+        if not news.in_table():
+            news_code = cap_code(news)
+            news.add_cap_code(news_code)
+
+            news.print_row()
+            news.write_to_csv(filename)
+            news.insert_into_sql()
 
 
 def cap_code(news_article: article_objects.News):

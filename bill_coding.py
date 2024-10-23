@@ -53,11 +53,13 @@ def get_bills():
             bill_introduced_date
         )
 
-        code = cap_code(bill)
-        bill.add_cap_code(code)
-        bill.print_row()
-        bill.write_to_csv(filename)
-        bill.insert_into_sql()
+        if not bill.in_table():
+            code = cap_code(bill)
+            bill.add_cap_code(code)
+
+            bill.print_row()
+            bill.write_to_csv(filename)
+            bill.insert_into_sql()
 
 
 def cap_code(bill: article_objects.Bill) -> str:

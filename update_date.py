@@ -11,7 +11,7 @@ def new_column():
     """statement to add bill column"""
     new_column_statement = (
         "ALTER TABLE {}"
-        "ADD COLUMN IF NOT EXISTS introduced_date timestamp with time zone"
+        "ADD COLUMN IF NOT EXISTS introduced_date date"
     )
     table = "bill"
     return new_column_statement, table
