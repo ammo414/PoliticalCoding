@@ -1,6 +1,6 @@
 # Additional Queries
 
-Ad-hoc queries ran for additional functionality
+Ad-hoc queries ran for data visualization purposes and additional data quality issues.
 
 ### Create view of cap-code pivot table
 
@@ -43,6 +43,8 @@ A subset of the results look like:
 |International Affairs|1|22|
 |Energy|4|0|
 
+The table in my Superset screenshot just is this table
+
 ### Update News Source
 
 ```sql
@@ -56,14 +58,14 @@ I realized that the `source` of my `news` was all wrong. While I updated my Pyth
 
 ### update_date
 
-Even though the Library of Congress publishes the `IntroducedDate` of each bill, I didn't initially export that data. In [update_date.py](update_date.py), I wrote a statement that added the appropriate column
+Even though the Library of Congress publishes the `IntroducedDate` of each bill, I didn't initially export that data. In [update_date.py](update_date.py), I wrote a statement that added the appropriate column:
+
 ```sql
 ALTER TABLE bill
 ADD COLUMN IF NOT EXISTS introduced_date date
 ```
- 
-then wrote a query that returned the bill's url from all rows with a `NULL` date:
 
+then wrote a query that returned the bill's url from all rows with a `NULL` date:
 
 ```sql
 SELECT number, url
@@ -71,11 +73,10 @@ FROM bill
 WHERE introduced_date IS NULL
 ```
 
-got the introduced date with Python, and then updated each row as appropriate
+got the introduced date with Python, and then updated each row as appropriate:
 
 ```sql
 UPDATE bill
 SET introduced_date = {date}
 WHERE number = {number}
 ```
-
