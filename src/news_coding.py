@@ -37,9 +37,9 @@ def unpack_news_rss_content(item_et):
     return (
         news_article_id,
         news_url,
-        news_title,
         news_source,
         news_pub_date,
+        news_title,
         news_description,
     )
 

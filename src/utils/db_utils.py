@@ -11,27 +11,6 @@ def compose_query(query, table):
     )
 
 
-
-
-def create_bill_table():
-    """returns statements to check if 'news' table exists and, if not, creates it"""
-    statement = (
-        "CREATE TABLE IF NOT EXISTS {}"
-        "("
-        "title text not null,"
-        "url text not null,"
-        "cap_code text,"
-        "number integer primary key,"
-        "committees text[],"
-        "policy_area text,"
-        "bill_type text,"
-        "congress integer"
-        ");"
-    )
-    table = "bill"
-    return statement, table
-
-
 class PostGreManager:
     """
     Manages all db connection functionality

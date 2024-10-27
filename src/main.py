@@ -1,8 +1,12 @@
 """main"""
 
+from utils import project_utils as utils
+
+utils.create_constants()
+
 import news_coding
 import bill_coding
-from utils import constants, project_utils as utils, db_utils
+from utils import constants, db_utils
 
 
 if __name__ == "__main__":
@@ -12,7 +16,6 @@ if __name__ == "__main__":
 
     db = db_utils.PostGreManager(constants.db_config)
     if db.connect():
-
         # create tables in database if not already present
         bill_statement, bill_table = bill_coding.create_bill_table()
         db.exec_query(bill_statement, bill_table)
