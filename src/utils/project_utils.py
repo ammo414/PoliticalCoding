@@ -46,7 +46,6 @@ def create_constants():
     print(constants_file)
 
     if not constants_file.is_file():
-        print("HELLOOOOO")
         ask_for_secrets = input("Do you want to add constants now? (y/n): ")
         if ask_for_secrets.lower() == "y":
             host = input("Host Name?: ")
