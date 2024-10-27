@@ -47,7 +47,7 @@ def create_constants():
 
     if not constants_file.is_file():
         ask_for_secrets = input("Do you want to add constants now? (y/n): ")
-        if ask_for_secrets.lower() == "y":
+        if "y" in list(ask_for_secrets.lower()):
             host = input("Host Name?: ")
             dbname = input("Database Name?: ")
             user = input("User Name?: ")
