@@ -4,8 +4,7 @@ from utils import project_utils as utils
 
 utils.create_constants()
 
-import news_coding
-import bill_coding
+from bill_and_news import news_coding, bill_coding
 from utils import constants, db_utils
 
 

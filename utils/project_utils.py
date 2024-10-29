@@ -42,7 +42,7 @@ def load_rss(url):
 
 def create_constants():
     """Create ./src/utils/constants.py file if not exists and asks for secrets"""
-    constants_file: Path = Path("./src/utils/constants.py")
+    constants_file: Path = Path("./utils/constants.py")
     print(constants_file)
 
     if not constants_file.is_file():
