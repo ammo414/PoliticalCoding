@@ -4,8 +4,8 @@ from utils import project_utils as utils
 
 utils.create_constants()
 
-from bill_and_news import news_coding, bill_coding
 from utils import constants, db_utils
+from bill_and_news import news_coding, bill_coding
 
 
 if __name__ == "__main__":

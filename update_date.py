@@ -3,7 +3,7 @@ create new column for introduced_date for bills table
 and then backfill data
 """
 
-from utils import project_utils as utils, constants
+from utils import constants, project_utils as utils
 from utils.db_utils import PostGreManager as pgm
 
 

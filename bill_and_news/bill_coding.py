@@ -1,7 +1,7 @@
 """all bills processing"""
 
 from utils import constants, llm_utils, project_utils as utils
-import article_objects
+from bill_and_news import article_objects
 
 
 def create_bill_table():

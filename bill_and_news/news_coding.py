@@ -3,7 +3,7 @@
 import xml.etree.ElementTree as ET
 
 from utils import llm_utils, project_utils as utils
-import article_objects
+from bill_and_news import article_objects
 
 
 def create_news_table():
