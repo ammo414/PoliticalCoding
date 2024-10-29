@@ -13,7 +13,8 @@ TODO:
 
 ## (Some) Documentation
 
-Currently, you will need to create a constants.py with the following information:
+
+The following `constants.py` file will be created with user input for values if desired. 
 
 ```python
 db_config = {
