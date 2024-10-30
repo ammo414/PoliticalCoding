@@ -6,6 +6,11 @@ Is there a difference in what senators and representatives are discussing in con
 
 This is project ingests congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and then classifies those data's policy areas with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3) using the [Comparative Agendas Project's (cap)](https://www.comparativeagendas.net/us) schema. The data is loaded into a (Supabase) PostGreSQL database daily, which is then connected to a [Superset](https://superset.apache.org/) instance for data analysis.
 
+## Credits
+Inspiration for this project comes from research I assisted in while in undergrad under the supervision of Beth Leech and Greg Lyon:
+
+* McKay, Amy, Beth L. Leech, Adam Chalmers, Patrick Bernhagen, and Joost Berkhout. nd. "What Matters: Public and       Private Agendas in Cross-National Perspective," unpublished manuscript, University of Exeter
+
 TODO:
 
 - [ ] enum everywhere
