@@ -86,7 +86,7 @@ AND
 
 will likely remove too much. For instance, if Trump starts talking about voter fraud again, that would be filtered out with this statement even though I'd want to see that in the results.
 
-I found that about 57% of all rows were labeled 'Government Operations', most of which had to do with the election. Drilling down, about 34% of all media articles and 7.5% of and bills were labeled as such. To compare, in 2015, about 9% of all US bills and about 9% of the NYT front page were related to Government Operations, according to the [Comparative Agendas Trend Tool](https://www.comparativeagendas.net/tool) (2015 is the last full year of data on the site.)
+I found that about 57% of all rows were labeled `Government Operations`, most of which had to do with the election. Drilling down, about 34% of all media articles and 7.5% of and bills were labeled as such. To compare, in 2015, about 9% of all US bills and about 9% of the NYT front page were related to Government Operations, according to the [Comparative Agendas Trend Tool](https://www.comparativeagendas.net/tool) (2015 is the last full year of data on the site.)
 
 ```sql
 with
