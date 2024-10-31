@@ -1,10 +1,10 @@
 """main"""
 
-from utils import project_utils as utils
+from utils import db_utils, project_utils as utils
 
 utils.create_constants()
 
-from utils import constants, db_utils
+from utils import constants
 from bill_and_news import news_coding, bill_coding
 
 
