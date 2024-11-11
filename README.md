@@ -2,7 +2,7 @@
 
 ## Project Description
 
-EDIT: As the huggingface models I was using [are no longer usable by the public](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3), I cannot continue with this project.
+EDIT: As the huggingface models I was using [are no longer usable by the public](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3), I cannot continue with ingesting data. The license I chose to use for this project is far more permissible: if you are anyone and want to use this pipeline, please read the LICENSE for exact restrictions.
 
 Is there a difference in what senators and representatives are discussing in congress and what is being discussed in the news? The best way to answer that is by collecting immense amounts of data from both sources, classifying topics, and comparing the overall landscape of what each group is discussing.
 
