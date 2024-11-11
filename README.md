@@ -2,6 +2,8 @@
 
 ## Project Description
 
+EDIT: As the huggingface models I was using [are no longer usable by the public](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3), I cannot continue with this project.
+
 Is there a difference in what senators and representatives are discussing in congress and what is being discussed in the news? The best way to answer that is by collecting immense amounts of data from both sources, classifying topics, and comparing the overall landscape of what each group is discussing.
 
 This is project ingests congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and then classifies those data's policy areas with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3) using the [Comparative Agendas Project's (cap)](https://www.comparativeagendas.net/us) schema. The data is loaded into a (Supabase) PostGreSQL database daily, which is then connected to a [Superset](https://superset.apache.org/) instance for data analysis.
