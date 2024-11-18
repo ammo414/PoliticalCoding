@@ -70,7 +70,7 @@ Getting media news data has been a struggle since the first day of this project.
 
 I decided to use Google News' rss feed functionality, but there were major drawbacks: I couldn't scrape the html itself because of paywalls, which meant that the only text data I had for each article was its title.
 
-A similar issue arose with the Library of Congress's API. The Library exposes bills, etc. data before they have been transcribed into text. That is, only scans of the original bills are present, which, again, means that I don't have much text data for each bill.
+A similar issue arose with the Library of Congress's API. The Library exposes bills, etc. data before they have been transcribed into text. That is, sometimes only scans of the original bills are present, which, again, means that I don't have much text data for each bill.
 
 While this is an important limitation to point out, I found that it actually didn't impact cap code labeling as much as I thought it would. The only arguably incorrect labels had to do with recent hurricane relief. While I would personally label those topics as 'Environment', the model opted to label them as 'Domestic Commerce'. That does make sense, it just doesn't make as much sense as 'Environment' does to me.
 
