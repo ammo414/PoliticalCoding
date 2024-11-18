@@ -2,11 +2,11 @@
 
 ## Project Description
 
-EDIT: As the huggingface models I was using [are no longer usable by the public](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3), I cannot continue with ingesting data. The license I chose to use for this project more permissible: if you are anyone and want to use this pipeline and have access to the HF models in question, please read the LICENSE for exact restrictions.
+EDIT: As the huggingface models I was using [are no longer usable by the public](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3), I cannot continue with ingesting data. The license I chose to use for this project is more permissible: if you are anyone and want to use this pipeline and have access to the HF models in question, then please read the LICENSE for exact restrictions.
 
-Is there a difference in what senators and representatives are discussing in congress and what is being discussed in the news? The best way to answer that is by collecting immense amounts of data from both sources, classifying topics, and comparing the overall landscape of what each group is discussing.
+Is there a difference in what senators and representatives are discussing in Congress and what is being discussed in the news? The best way to answer that is by collecting immense amounts of data from both sources, classifying topics, and comparing the overall landscape of what each group is discussing.
 
-This is project ingests congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and then classifies those data's policy areas with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3) using the [Comparative Agendas Project's (cap)](https://www.comparativeagendas.net/us) schema. The data is loaded into a (Supabase) PostGreSQL database daily, which is then connected to a [Superset](https://superset.apache.org/) instance for data analysis.
+This is project ingests congressional data from the [Library of Congress's API]([https://api.data.gov/docs/developer-manual/]) and political news from a Google News rss feed and then classifies those data's policy areas with a [pretrained Huggingface model](https://huggingface.co/poltextlab/xlm-roberta-large-english-legislative-cap-v3) that uses the [Comparative Agendas Project's (cap)](https://www.comparativeagendas.net/us) schema. The data is loaded into a PostGreSQL database daily, which is then connected to a [Superset](https://superset.apache.org/) instance for data analysis.
 
 ### Credits
 Inspiration for this project comes from research I assisted in while in undergrad under the supervision of Beth Leech and Greg Lyon:
@@ -20,7 +20,7 @@ Inspiration for this project comes from research I assisted in while in undergra
 
 ## (Some) Documentation
 
-The following `constants.py` file will be created with user input for values if desired. 
+Upon initial startup, the following `constants.py` file will be created with the option of inputting values.
 
 ```python
 db_config = {
@@ -33,7 +33,7 @@ db_config = {
 CONGRESS_API_KEY = 'congress_key'
 ```
 
-The two tables that will be created in your database have the following schema:
+Two tables that will be created in your database with the following schemas:
 
 ```sql
 Table bill {
