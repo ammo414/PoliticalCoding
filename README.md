@@ -88,7 +88,7 @@ SELECT * FROM news
 WHERE
     description NOT SIMILAR TO '%(Trump|Harris)%'
 AND
-    cap_code NOT LIKE 'Government Operations'
+    cap_code != 'Government Operations'
 ```
 
 will likely remove too much. For instance, if Trump starts talking about voter fraud again, that would be filtered out with this statement even though I'd want to see that in the results.
@@ -105,7 +105,7 @@ with
         from
           cap_code_pivot
         where
-          cap_code like 'Government Operations'
+          cap_code = 'Government Operations'
       ) as gov_op_count,
       sum(bill_count + news_count) as total_count
     from
