@@ -13,6 +13,11 @@ Inspiration for this project comes from research I assisted in while in undergra
 
 * McKay, Amy, Beth L. Leech, Adam Chalmers, Patrick Bernhagen, and Joost Berkhout. nd. "What Matters: Public and       Private Agendas in Cross-National Perspective," unpublished manuscript, University of Exeter
 
+### Current State and Analytics
+
+A screenshot of my superset dashboard at the moment:
+![superset dashboard of articles over time by cap code, and overall composition of cap codes for articles and for bills](images/superset-screenshot.png)
+
 ## TODO:
 
 - [ ] enum everywhere
@@ -136,8 +141,3 @@ A lot of the bigger struggles with this project was deciding where certain funct
 ### Conclusion
 
 I said that I will wrap up this project soon, but I will likely revisit after the elections. It would be nice to have better news data, but as previously mentioned, the models already do a great job. Overall, though, while I wouldn't call this project a complete success, I am glad that I did this and am excited to apply what I learned in other projects.
-
-### Current Analytics
-
-A screenshot of my superset dashboard at the moment:
-![superset dashboard of articles over time by cap code, and overall composition of cap codes for articles and for bills](images/superset-screenshot.png)
