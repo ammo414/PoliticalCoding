@@ -21,7 +21,7 @@ from
     group by
       cap_code
   ) as b
-  left outer join (
+  full outer join (
     select
       cap_code,
       count(article_id) as count
